@@ -1,6 +1,5 @@
 import { logout } from "@/api/auth";
 import { CustomButton } from "@/components";
-import { clearToken } from "@/utils/storage";
 import { useRouter } from "expo-router";
 import React from "react";
 import { Alert, SafeAreaView, Text } from "react-native";
@@ -15,9 +14,10 @@ const Dashboard = () => {
     } catch (error: any) {
       console.log("Logout API error:", error.message);
       Alert.alert("Logout Failed", error.message);
+      console.error("Logout error:", error);
     } finally {
-      await clearToken();
-      router.replace("/");
+      // await clearTokens();
+      // router.replace("/");
     }
   };
 

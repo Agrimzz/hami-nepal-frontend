@@ -1,7 +1,8 @@
+import { api } from "@/api/client";
 import { FormField } from "@/components";
 import { CustomButton } from "@/components/Form/CustomButton";
 import images from "@/constants/images";
-import { getToken } from "@/utils/storage";
+import { clearTokens, getRefreshToken, saveTokens } from "@/utils/storage";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "expo-router";
 import { useEffect } from "react";
@@ -38,11 +39,24 @@ export function Login() {
   });
 
   useEffect(() => {
-    const checkAuth = async () => {
-      const token = await getToken();
-      if (token) router.replace("/dashboard");
+    const tryRefresh = async () => {
+      const refreshToken = await getRefreshToken();
+      if (!refreshToken) return; // No refresh token, stay on login
+
+      try {
+        // Attempt to refresh tokens
+        const res = await api.post("/accounts/v1/refresh/", {
+          refresh: refreshToken,
+        });
+        const { access, refresh } = res.data;
+        await saveTokens(access, refresh);
+        router.replace("/dashboard");
+      } catch {
+        await clearTokens();
+        // Stay on login
+      }
     };
-    checkAuth();
+    tryRefresh();
   }, []);
 
   const onSubmit = (data: LoginSchema) => {
