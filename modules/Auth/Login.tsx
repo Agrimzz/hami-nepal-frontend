@@ -45,12 +45,12 @@ export function Login() {
 
       try {
         // Attempt to refresh tokens
-        const res = await api.post("/accounts/v1/refresh/", {
+        const res = await api.post("/accounts/v1/token/refresh/", {
           refresh: refreshToken,
         });
-        const { access, refresh } = res.data;
-        await saveTokens(access, refresh);
-        router.replace("/dashboard");
+        const { access } = res.data;
+        await saveTokens(access, refreshToken);
+        router.replace("/(root)/dashboard");
       } catch {
         await clearTokens();
         // Stay on login
@@ -61,7 +61,7 @@ export function Login() {
 
   const onSubmit = (data: LoginSchema) => {
     login(data, {
-      onSuccess: () => router.replace("/dashboard"),
+      onSuccess: () => router.replace("/(root)/dashboard"),
       onError: (err: any) => {
         let message = "Something went wrong. Please try again.";
 

@@ -14,6 +14,13 @@ export const api = axios.create({
 // Attach access token to each request
 api.interceptors.request.use(
   async (config) => {
+    if (
+      config.url?.includes("/accounts/v1/login/") ||
+      config.url?.includes("/accounts/v1/token/refresh/")
+    ) {
+      config.headers["X-Client"] = "react-native";
+      return config;
+    }
     const token = await getAccessToken();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
