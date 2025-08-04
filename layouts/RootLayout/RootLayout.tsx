@@ -31,10 +31,15 @@ export function RootLayout() {
       <GestureHandlerRootView>
         <Stack>
           <Stack.Screen name="(auth)/index" options={{ headerShown: false }} />
-          <Stack.Screen name="dashboard" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="(root)/dashboard"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="(root)/inventory"
+            options={{ headerShown: false }}
+          />
           {/* 
-        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-        <Stack.Screen name="inventory" options={{ headerShown: false }} />
         <Stack.Screen
         name="inventory/(general)"
           options={{ headerShown: false }}
