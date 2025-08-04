@@ -1,7 +1,7 @@
 import { getAccessToken } from "@/utils/storage";
 import axios from "axios";
 
-const API_BASE_URL = "http://192.168.101.21:8000/api";
+const API_BASE_URL = "http://192.168.101.12:8000/api";
 
 export const api = axios.create({
   baseURL: API_BASE_URL,
@@ -17,6 +17,7 @@ api.interceptors.request.use(
     const token = await getAccessToken();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+      config.headers["X-Client"] = "react-native";
     }
     return config;
   },
