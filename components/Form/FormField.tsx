@@ -38,7 +38,9 @@ export function FormField({
   })();
 
   return (
-    <View className={`w-full space-y-1 bg-gray p-4 rounded-2xl ${otherStyles}`}>
+    <View
+      className={`w-full space-y-1 bg-gray px-3 py-2 rounded-2xl ${otherStyles}`}
+    >
       <Text className="text-lightgray font-pregular">{title}</Text>
 
       <View className="flex flex-row items-center justify-between">
