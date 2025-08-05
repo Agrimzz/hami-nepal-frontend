@@ -5,7 +5,16 @@ import { Ellipsis } from "lucide-react-native";
 import { Image, Pressable, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { CausesCard } from "./components/CausesCard";
+import { useFetchCauses } from "./hooks/useFetchCauses";
 export function CauseDashboard() {
+  const { data, isLoading } = useFetchCauses();
+  if (isLoading) {
+    return (
+      <SafeAreaView className="bg-background h-full flex items-center justify-center">
+        <Text className="text-white">Loading...</Text>
+      </SafeAreaView>
+    );
+  }
   return (
     <SafeAreaView className="bg-background h-full">
       {/* Header */}
@@ -31,24 +40,19 @@ export function CauseDashboard() {
       </View>
 
       <View className="mt-4 px-4 flex gap-2">
-        <CausesCard
-          title="Save the Earth"
-          description="Join us in our mission to protect the environment and promote sustainability."
-          category="Environment"
-          status="active"
-        />
-        <CausesCard
-          title="Save the Children"
-          description="Join us in our mission to protect the environment and promote sustainability."
-          category="Environment"
-          status="inactive"
-        />
-        <CausesCard
-          title="Save the Animals"
-          description="Join us in our mission to protect the environment and promote sustainability."
-          category="Environment"
-          status="active"
-        />
+        {data?.map((cause: any) => (
+          <Pressable
+            key={cause.id}
+            onPress={() => router.push(`/cause/${cause.id}`)}
+          >
+            <CausesCard
+              title={cause.title}
+              description={cause.description}
+              category={cause.category}
+              status={cause.status}
+            />
+          </Pressable>
+        ))}
       </View>
     </SafeAreaView>
   );

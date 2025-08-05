@@ -1,9 +1,21 @@
+import { CustomButton, FormField } from "@/components";
 import images from "@/constants/images";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { router } from "expo-router";
-import { Ellipsis, View } from "lucide-react-native";
-import { useForm } from "react-hook-form";
-import { Alert, Image, Pressable, Text } from "react-native";
+import { Ellipsis } from "lucide-react-native";
+import { Controller, useForm } from "react-hook-form";
+import {
+  Alert,
+  Image,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  ScrollView,
+  Text,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useCreateCause } from "../hooks/useCreateCuase";
 import { causeSchema, CauseSchema } from "./causeSchema";
@@ -27,7 +39,11 @@ export function CauseForm() {
 
   const onSubmit = (data: CauseSchema) => {
     createCause(data, {
-      onSuccess: () => router.push("/cause"),
+      onSuccess: () => {
+        router.push("/cause");
+
+        Alert.alert("Success", "Cause created successfully");
+      },
       onError: (err: any) => {
         console.error("Create Cause Error:", err);
         Alert.alert("Error", "Failed to create cause");
@@ -38,7 +54,7 @@ export function CauseForm() {
   return (
     <SafeAreaView className="h-full bg-background">
       {/* Header */}
-      <View className="w-full flex flex-row items-center justify-between p-4">
+      <View className="w-full flex flex-row items-center justify-between p-4 ">
         <Pressable onPress={() => router.push("/dashboard")}>
           <Image source={images.logo1} className="w-14 h-14 rounded-full" />
         </Pressable>
@@ -47,7 +63,7 @@ export function CauseForm() {
           <Ellipsis size={16} color="#F1F1F1" />
         </View>
       </View>
-      {/* <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           keyboardVerticalOffset={Platform.OS === "ios" ? 60 : 0}
@@ -121,7 +137,7 @@ export function CauseForm() {
             </View>
           </ScrollView>
         </KeyboardAvoidingView>
-      </TouchableWithoutFeedback> */}
+      </TouchableWithoutFeedback>
     </SafeAreaView>
   );
 }
