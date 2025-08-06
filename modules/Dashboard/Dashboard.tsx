@@ -51,13 +51,14 @@ export function Dashboard() {
             <MoveUpRight size={20} color="#F1F1F1" />
           </View>
         </TouchableOpacity>
-        <TouchableOpacity className="bg-gray px-4 py-8 rounded-2xl w-[48%]">
+        <TouchableOpacity
+          className="bg-gray px-4 py-8 rounded-2xl w-[48%]"
+          onPress={() => router.push("/user")}
+        >
           <View className="flex flex-row items-center justify-between">
             <View className="space-y-1">
               <Text className="text-lg text-white font-pregular">View</Text>
-              <Text className="text-lg text-white font-pregular">
-                Volunteers
-              </Text>
+              <Text className="text-lg text-white font-pregular">Users</Text>
             </View>
             <MoveUpRight size={20} color="#F1F1F1" />
           </View>
