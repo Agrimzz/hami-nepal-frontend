@@ -20,7 +20,7 @@ export function Onboard() {
       </Text>
       <View className="w-full gap-4 items-center">
         <Pressable
-          className="w-full rounded-2xl bg-black/50 flex flex-row justify-center items-center gap-2 py-6"
+          className="w-full rounded-xl bg-black/50 flex flex-row justify-center items-center gap-2 py-6"
           onPress={() => {
             router.push("/login");
           }}

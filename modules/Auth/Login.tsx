@@ -99,8 +99,15 @@ export function Login() {
           >
             <View className="flex-1 justify-center items-center px-4 gap-8">
               <View className="flex flex-col gap-4 items-center">
-                <Image source={images.logo1} className="w-32 h-32" />
-                <Text className="text-4xl font-pbold text-white">Sign In</Text>
+                <View className="gap-2 items-center">
+                  <Image source={images.logo1} className="w-8 h-8" />
+                  <Text className="text-xs font-psemibold text-white">
+                    Hami Nepal | Management
+                  </Text>
+                </View>
+                <Text className="text-4xl font-pbold text-primary">
+                  Sign In
+                </Text>
               </View>
 
               <View className="w-full flex flex-col gap-4">
@@ -133,6 +140,7 @@ export function Login() {
                 />
                 <CustomButton
                   title="Sign In"
+                  containerStyles="bg-black/50"
                   handlePress={handleSubmit(onSubmit)}
                   isLoading={isPending}
                 />
@@ -142,8 +150,10 @@ export function Login() {
         </KeyboardAvoidingView>
       </TouchableWithoutFeedback>
 
-      <Text className="text-lightgray text-center mb-4 font-pthin absolute bottom-4 w-full">
-        For the people by the people
+      <Text className=" text-white/50 text-xs  font-pbold text-center absolute bottom-12 self-center">
+        By continuing you are agreeing to our{" \n "}
+        <Text className="text-white"> Privacy Policy</Text> and{" "}
+        <Text className="text-white">Terms and Conditions.</Text>
       </Text>
     </SafeAreaView>
   );
