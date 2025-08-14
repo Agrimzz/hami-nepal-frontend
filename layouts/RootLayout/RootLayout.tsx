@@ -48,6 +48,7 @@ export function RootLayout() {
     <QueryClientProvider client={queryClient}>
       <GestureHandlerRootView>
         <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="index" />
           <Stack.Screen name="(auth)/index" />
           <Stack.Screen name="(root)/dashboard" />
           <Stack.Screen name="(root)/inventory" />
