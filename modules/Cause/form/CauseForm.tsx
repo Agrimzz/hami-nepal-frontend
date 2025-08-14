@@ -132,7 +132,6 @@ export function CauseForm() {
                 title="Create Cause"
                 handlePress={handleSubmit(onSubmit)}
                 isLoading={isPending}
-                containerStyles="mt-4"
               />
             </View>
           </ScrollView>

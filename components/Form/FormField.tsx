@@ -39,13 +39,13 @@ export function FormField({
 
   return (
     <View
-      className={`w-full space-y-1 bg-gray px-3 py-2 rounded-2xl ${otherStyles}`}
+      className={`w-full space-y-1 bg-white/5 px-3 py-2 rounded-xl border border-white/5 ${otherStyles}`}
     >
-      <Text className="text-lightgray font-pregular">{title}</Text>
+      <Text className="text-lightgray text-xs font-pregular">{title}</Text>
 
       <View className="flex flex-row items-center justify-between">
         <TextInput
-          className="placeholder:text-white/70 text-white p-0 font-pregular flex-1 py-2"
+          className="placeholder:text-white/70 text-white p-0 font-pregular text-sm flex-1 py-2"
           placeholder={placeholder}
           value={value}
           onChangeText={handleChangeText}
