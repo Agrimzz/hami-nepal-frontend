@@ -52,11 +52,11 @@ export function RootLayout() {
           <Stack.Screen name="(auth)/index" />
           <Stack.Screen name="(root)/dashboard" />
           <Stack.Screen name="(root)/inventory" />
-          <Stack.Screen name="(root)/cause/index" />
-          <Stack.Screen name="(root)/cause/new" />
-          <Stack.Screen name="(root)/user" />
-          <Stack.Screen name="(root)/user/index" />
-          <Stack.Screen name="(root)/user/new" />
+          <Stack.Screen name="(root)/causes/index" />
+          <Stack.Screen name="(root)/causes/new" />
+          <Stack.Screen name="(root)/accounts" />
+          <Stack.Screen name="(root)/accounts/index" />
+          <Stack.Screen name="(root)/accounts/new" />
           {/* 
         <Stack.Screen
         name="inventory/(general)"
