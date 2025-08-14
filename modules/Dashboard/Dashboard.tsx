@@ -1,78 +1,69 @@
-import { clearTokens } from "@/utils/storage";
-import { useRouter } from "expo-router";
-import { LogOut, Menu, MoveUpRight, User } from "lucide-react-native";
-import { SafeAreaView, Text, TouchableOpacity, View } from "react-native";
+import {
+  Calendar,
+  ChevronDown,
+  Settings,
+  Truck,
+  Warehouse,
+} from "lucide-react-native";
+import { ScrollView, Text, View } from "react-native";
 
 export function Dashboard() {
-  const router = useRouter();
   return (
-    <SafeAreaView className="bg-background h-full">
-      <View className="w-full bg-gray px-4 py-8 rounded-b-2xl">
-        <View className="flex flex-row items-center justify-between py-2">
-          <Menu size={20} color="#F1F1F1" />
-          <View className="flex flex-row gap-2">
-            <User size={20} color="#F1F1F1" />
-            <LogOut
-              size={20}
-              color="red"
-              onPress={async () => {
-                await clearTokens();
-                router.replace("/");
-              }}
-            />
-          </View>
+    <ScrollView className="px-4 flex-1">
+      <Text className="text-white text-3xl font-psemibold">
+        Hi there,<Text className="text-primary"> Admin</Text> {"\n"}here is a
+        quick overview {"\n"}of the organization.
+      </Text>
+
+      {/* TODO: Snap the end filter to end of the list */}
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        className="mt-4 "
+        contentContainerStyle={{ gap: 4 }}
+      >
+        {/* Settings */}
+        <View className="bg-primary rounded-2xl justify-center items-center w-14 h-14">
+          <Settings size={18} color="#F1F1F1" />
         </View>
-        <Text className="text-4xl font-pbold text-white mt-4">Dashboard</Text>
+
+        {[
+          { Icon: Calendar, label: "Calendar", value: "All Time" },
+          {
+            Icon: Warehouse,
+            label: "Warehouse",
+            value: "Ranbari Warehouse",
+          },
+          {
+            Icon: Truck,
+            label: "Supplier",
+            value: "Supplier 1",
+            extra: true,
+          },
+        ].map(({ Icon, label, value, extra }) => (
+          <View
+            key={label}
+            className={`flex-row items-center bg-white/10 rounded-2xl h-14 px-4 gap-2 ${
+              extra ? "mr-8" : ""
+            }`}
+          >
+            <Icon size={18} color="#F1F1F1" />
+            <Text className="text-xs font-plight text-lightgray">{label}</Text>
+            <Text className="text-xs font-plight text-white">{value}</Text>
+            <ChevronDown size={18} color="#F1F1F1" />
+          </View>
+        ))}
+      </ScrollView>
+
+      <View className="w-full bg-primary rounded-2xl h-[200px] mt-4"></View>
+      <View className="flex flex-row justify-between mt-2">
+        <View className="w-[49%] h-[200px] bg-gray/50 rounded-2xl" />
+        <View className="w-[49%] h-[200px] bg-gray/50 rounded-2xl" />
       </View>
-      <View className="w-full flex flex-row flex-wrap gap-4 mt-4 px-4">
-        <TouchableOpacity
-          className="bg-gray px-4 py-8 rounded-2xl w-[48%]"
-          onPress={() => router.push("/inventory/dashboard")}
-        >
-          <View className="flex flex-row items-center justify-between">
-            <View className="space-y-1">
-              <Text className="text-lg text-white font-pregular">View</Text>
-              <Text className="text-lg text-white font-pregular">
-                Inventory
-              </Text>
-            </View>
-            <MoveUpRight size={20} color="#F1F1F1" />
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          className="bg-gray px-4 py-8 rounded-2xl w-[48%]"
-          onPress={() => router.push("/cause")}
-        >
-          <View className="flex flex-row items-center justify-between">
-            <View className="space-y-1">
-              <Text className="text-lg text-white font-pregular">View</Text>
-              <Text className="text-lg text-white font-pregular">Causes</Text>
-            </View>
-            <MoveUpRight size={20} color="#F1F1F1" />
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          className="bg-gray px-4 py-8 rounded-2xl w-[48%]"
-          onPress={() => router.push("/user")}
-        >
-          <View className="flex flex-row items-center justify-between">
-            <View className="space-y-1">
-              <Text className="text-lg text-white font-pregular">View</Text>
-              <Text className="text-lg text-white font-pregular">Users</Text>
-            </View>
-            <MoveUpRight size={20} color="#F1F1F1" />
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity className="bg-gray px-4 py-8 rounded-2xl w-[48%]">
-          <View className="flex flex-row items-center justify-between">
-            <View className="space-y-1">
-              <Text className="text-lg text-white font-pregular">View</Text>
-              <Text className="text-lg text-white font-pregular">Orders</Text>
-            </View>
-            <MoveUpRight size={20} color="#F1F1F1" />
-          </View>
-        </TouchableOpacity>
+      <View className="flex flex-row justify-between mt-2">
+        <View className="w-[49%] h-[200px] bg-gray/50 rounded-2xl" />
+        <View className="w-[49%] h-[200px] bg-gray/50 rounded-2xl" />
       </View>
-    </SafeAreaView>
+    </ScrollView>
   );
 }
