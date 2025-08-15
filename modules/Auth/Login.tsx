@@ -6,7 +6,8 @@ import { useApiMutation } from "@/hooks/useApiMutation";
 import { clearTokens, getRefreshToken, saveTokens } from "@/utils/storage";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "expo-router";
-import { useEffect } from "react";
+import { LoaderCircle } from "lucide-react-native";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
   Alert,
@@ -24,6 +25,7 @@ import { loginSchema, LoginSchema } from "./validation/loginSchema";
 
 export function Login() {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
   const { mutate: login, isPending } = useApiMutation(
     "post",
     "/accounts/v1/login/"
@@ -44,10 +46,11 @@ export function Login() {
   useEffect(() => {
     const tryRefresh = async () => {
       const refreshToken = await getRefreshToken();
-      if (!refreshToken) return; // No refresh token, stay on login
+      console.log("refreshToken", refreshToken);
+      if (!refreshToken) return;
 
       try {
-        // Attempt to refresh tokens
+        setIsLoading(true);
         const res = await api.post("/accounts/v1/token/refresh/", {
           refresh: refreshToken,
         });
@@ -56,15 +59,18 @@ export function Login() {
         router.replace("/(root)/dashboard");
       } catch {
         await clearTokens();
-        // Stay on login
+      } finally {
+        setIsLoading(false);
       }
     };
+
     tryRefresh();
   }, []);
 
   const onSubmit = (data: LoginSchema) => {
     login(data, {
       onSuccess: async (data: any) => {
+        console.log("data", data);
         await saveTokens(data.access, data.refresh);
         router.replace("/(root)/dashboard");
       },
@@ -90,6 +96,15 @@ export function Login() {
       },
     });
   };
+
+  if (isLoading)
+    return (
+      <View className="flex-1 justify-center items-center  bg-background">
+        <View className="animate-spin">
+          <LoaderCircle size={24} color="#F1F1F1" className="mx-auto " />
+        </View>
+      </View>
+    );
 
   return (
     <SafeAreaView className="bg-background flex-1">

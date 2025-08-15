@@ -1,3 +1,3 @@
-import { UserForm } from "@/modules/Accounts/form";
+import { UserForm } from "@/modules";
 
 export default UserForm;
