@@ -9,8 +9,8 @@ import { ScrollView, Text, View } from "react-native";
 
 export function Dashboard() {
   return (
-    <ScrollView className="px-4 flex-1">
-      <Text className="text-white text-3xl font-psemibold">
+    <ScrollView className=" flex-1">
+      <Text className="text-white text-3xl font-psemibold px-4">
         Hi there,<Text className="text-primary"> Admin</Text> {"\n"}here is a
         quick overview {"\n"}of the organization.
       </Text>
@@ -19,7 +19,7 @@ export function Dashboard() {
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        className="mt-4 "
+        className="mt-4 px-4"
         contentContainerStyle={{ gap: 4 }}
       >
         {/* Settings */}
@@ -55,14 +55,16 @@ export function Dashboard() {
         ))}
       </ScrollView>
 
-      <View className="w-full bg-primary rounded-2xl h-[200px] mt-4"></View>
-      <View className="flex flex-row justify-between mt-2">
-        <View className="w-[49%] h-[200px] bg-gray/50 rounded-2xl" />
-        <View className="w-[49%] h-[200px] bg-gray/50 rounded-2xl" />
-      </View>
-      <View className="flex flex-row justify-between mt-2">
-        <View className="w-[49%] h-[200px] bg-gray/50 rounded-2xl" />
-        <View className="w-[49%] h-[200px] bg-gray/50 rounded-2xl" />
+      <View className="px-4">
+        <View className="w-full bg-primary rounded-2xl h-[200px] mt-4"></View>
+        <View className="flex flex-row justify-between mt-2">
+          <View className="w-[49%] h-[200px] bg-gray/50 rounded-2xl" />
+          <View className="w-[49%] h-[200px] bg-gray/50 rounded-2xl" />
+        </View>
+        <View className="flex flex-row justify-between mt-2">
+          <View className="w-[49%] h-[200px] bg-gray/50 rounded-2xl" />
+          <View className="w-[49%] h-[200px] bg-gray/50 rounded-2xl" />
+        </View>
       </View>
     </ScrollView>
   );
