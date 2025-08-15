@@ -5,14 +5,10 @@ import { LoaderCircle } from "lucide-react-native";
 import { useState } from "react";
 import { FlatList, RefreshControl, Text, View } from "react-native";
 import { UserCard } from "./components/UserCard";
+import { UserSchemaWithId } from "./form/userSchema";
 
-const tabs = ["users", "roles"] as const;
-const tabRoutes = {
-  users: "/accounts",
-  roles: "/accounts/roles",
-} as const;
 export function UserDashboard() {
-  const { data, isLoading, refetch } = useApiQuery(
+  const { data, isLoading, refetch } = useApiQuery<UserSchemaWithId[]>(
     ["users"],
     "/accounts/v1/users/"
   );
@@ -38,17 +34,16 @@ export function UserDashboard() {
     <View className=" flex-1 px-4 relative">
       <FlatList
         data={data}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.id.toString()}
         showsVerticalScrollIndicator={false}
         className=""
         renderItem={({ item }) => (
           <UserCard
             name={item.full_name}
-            role={item.role ?? "Admin"}
-            position={item.position ?? "Project Manager"}
+            role={"Admin"}
+            position={"Project Manager"}
             key={item.id}
             img={
-              item.img ??
               "https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
             }
           />

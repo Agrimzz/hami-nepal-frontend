@@ -9,3 +9,5 @@ export const userSchema = z.object({
 });
 
 export type UserSchema = z.infer<typeof userSchema>;
+
+export type UserSchemaWithId = UserSchema & { id: number };
