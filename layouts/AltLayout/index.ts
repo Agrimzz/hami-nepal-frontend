@@ -1,0 +1,1 @@
+export { AltLayout } from "./AltLayout";

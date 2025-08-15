@@ -23,9 +23,9 @@ export function TabLayout({ title, tabs, tabRoutes }: TabLayoutProps) {
   })();
 
   return (
-    <ScrollView
-      className=" h-full"
-      stickyHeaderIndices={[1]} // index 1 = tabs, index 2 = filters
+    <View
+      className=" flex-1"
+      // stickyHeaderIndices={[1]}
     >
       {/* Title (will scroll away) */}
       <Text className="text-white text-3xl font-psemibold px-4">
@@ -103,6 +103,6 @@ export function TabLayout({ title, tabs, tabRoutes }: TabLayoutProps) {
       <View className="flex-1">
         <Slot />
       </View>
-    </ScrollView>
+    </View>
   );
 }
