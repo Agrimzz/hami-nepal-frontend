@@ -16,7 +16,7 @@ export function MainLayout() {
 
   return (
     <SafeAreaView className="flex-1 bg-background relative">
-      <View className="w-full flex flex-row justify-between items-center p-4">
+      <View className="w-full flex flex-row justify-between items-center px-4 py-2 ">
         <Image source={images.logo} className="w-8 h-8 " />
         <View className="flex flex-row gap-2 items-center">
           <LogOut
