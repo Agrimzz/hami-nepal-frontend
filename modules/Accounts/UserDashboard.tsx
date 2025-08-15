@@ -1,10 +1,10 @@
 import AddButton from "@/components/AddButton";
+import { useApiQuery } from "@/hooks/useApiQuery";
 import { router } from "expo-router";
 import { LoaderCircle } from "lucide-react-native";
 import { useState } from "react";
 import { FlatList, RefreshControl, Text, View } from "react-native";
 import { UserCard } from "./components/UserCard";
-import { useFetchUsers } from "./hooks/useFetchUser";
 
 const tabs = ["users", "roles"] as const;
 const tabRoutes = {
@@ -12,7 +12,10 @@ const tabRoutes = {
   roles: "/accounts/roles",
 } as const;
 export function UserDashboard() {
-  const { data, isLoading, refetch } = useFetchUsers();
+  const { data, isLoading, refetch } = useApiQuery(
+    ["users"],
+    "/accounts/v1/users/"
+  );
 
   const [refreshing, setRefreshing] = useState(false);
 

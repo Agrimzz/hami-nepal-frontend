@@ -1,4 +1,5 @@
 import { CustomButton, FormField } from "@/components";
+import { useApiMutation } from "@/hooks/useApiMutation";
 import AltLayoutRouteContext from "@/layouts/AltLayout/context/AltLayoutRoute.context";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { router } from "expo-router";
@@ -13,7 +14,6 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import { useCreateUser } from "../hooks/useCreateUser";
 import { userSchema, UserSchema } from "./userSchema";
 
 export function UserForm() {
@@ -30,7 +30,10 @@ export function UserForm() {
     },
   });
 
-  const { mutate: createCause, isPending } = useCreateUser();
+  const { mutate: createUser, isPending } = useApiMutation(
+    "post",
+    "/accounts/v1/users/"
+  );
 
   const { setRoutePath } = useContext(AltLayoutRouteContext);
   useEffect(() => {
@@ -38,7 +41,7 @@ export function UserForm() {
   }, []);
 
   const onSubmit = (data: UserSchema) => {
-    createCause(data, {
+    createUser(data, {
       onSuccess: () => {
         router.replace("/accounts");
 
@@ -46,7 +49,7 @@ export function UserForm() {
       },
       onError: (err: any) => {
         console.error("Create User Error:", err);
-        Alert.alert("Error", "Failed to create cause");
+        Alert.alert("Error", "Failed to create user");
       },
     });
   };
@@ -100,6 +103,7 @@ export function UserForm() {
                   title="Password"
                   placeholder="******"
                   value={value}
+                  type="password"
                   handleChangeText={onChange}
                   error={errors.password?.message}
                 />

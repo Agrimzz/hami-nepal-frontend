@@ -2,6 +2,7 @@ import { api } from "@/api/client";
 import { FormField } from "@/components";
 import { CustomButton } from "@/components/Form/CustomButton";
 import images from "@/constants/images";
+import { useApiMutation } from "@/hooks/useApiMutation";
 import { clearTokens, getRefreshToken, saveTokens } from "@/utils/storage";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "expo-router";
@@ -19,12 +20,14 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useLogin } from "./hooks/useLogin";
 import { loginSchema, LoginSchema } from "./validation/loginSchema";
 
 export function Login() {
   const router = useRouter();
-  const { mutate: login, isPending } = useLogin();
+  const { mutate: login, isPending } = useApiMutation(
+    "post",
+    "/accounts/v1/login/"
+  );
 
   const {
     control,
@@ -61,7 +64,10 @@ export function Login() {
 
   const onSubmit = (data: LoginSchema) => {
     login(data, {
-      onSuccess: () => router.replace("/(root)/dashboard"),
+      onSuccess: async (data: any) => {
+        await saveTokens(data.access, data.refresh);
+        router.replace("/(root)/dashboard");
+      },
       onError: (err: any) => {
         let message = "Something went wrong. Please try again.";
 
