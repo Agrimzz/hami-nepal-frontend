@@ -1,7 +1,7 @@
 import { getAccessToken } from "@/utils/storage";
 import axios from "axios";
 
-const API_BASE_URL = "http://192.168.101.14:8000/api";
+export const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL + "/api";
 
 export const api = axios.create({
   baseURL: API_BASE_URL,
@@ -20,6 +20,9 @@ api.interceptors.request.use(
     ) {
       config.headers["X-Client"] = "react-native";
       return config;
+    }
+    if (config.url?.includes("/filehandler/v1/upload/")) {
+      config.headers["Content-Type"] = "multipart/form-data";
     }
     const token = await getAccessToken();
     if (token) {

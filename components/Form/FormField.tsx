@@ -64,9 +64,9 @@ export function FormField({
           {isPasswordField && (
             <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
               {showPassword ? (
-                <EyeOff size={20} color="#F1F1F1" />
+                <EyeOff size={20} color="gray" />
               ) : (
-                <Eye size={20} color="#F1F1F1" />
+                <Eye size={20} color="gray" />
               )}
             </TouchableOpacity>
           )}

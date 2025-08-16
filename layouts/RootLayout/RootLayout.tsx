@@ -1,3 +1,4 @@
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
@@ -47,30 +48,21 @@ export function RootLayout() {
   return (
     <QueryClientProvider client={queryClient}>
       <GestureHandlerRootView>
-        <Stack screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="index" />
-          <Stack.Screen name="(auth)/index" />
-          <Stack.Screen name="(root)/dashboard" />
-          <Stack.Screen name="(root)/inventory" />
-          <Stack.Screen name="(root)/causes/index" />
-          <Stack.Screen name="(root)/causes/new" />
-          <Stack.Screen name="(root)/accounts" />
-          <Stack.Screen name="(root)/accounts/index" />
-          <Stack.Screen name="(root)/accounts/new" />
-          <Stack.Screen name="(alt)/forms/accounts" />
-          <Stack.Screen name="(alt)/forms/roles" />
-          {/* 
-        <Stack.Screen
-        name="inventory/(general)"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="inventory/(noheader)"
-          options={{ headerShown: false }}
-          />
-          
-        <Stack.Screen name="form" options={{ headerShown: false }} /> */}
-        </Stack>
+        <BottomSheetModalProvider>
+          <Stack screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="index" />
+            <Stack.Screen name="(auth)/index" />
+            <Stack.Screen name="(root)/dashboard" />
+            <Stack.Screen name="(root)/inventory" />
+            <Stack.Screen name="(root)/causes/index" />
+            <Stack.Screen name="(root)/causes/new" />
+            <Stack.Screen name="(root)/accounts" />
+            <Stack.Screen name="(root)/accounts/index" />
+            <Stack.Screen name="(root)/accounts/new" />
+            <Stack.Screen name="(alt)/forms/accounts" />
+            <Stack.Screen name="(alt)/forms/roles" />
+          </Stack>
+        </BottomSheetModalProvider>
       </GestureHandlerRootView>
     </QueryClientProvider>
   );

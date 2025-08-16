@@ -5,10 +5,9 @@ import { LoaderCircle } from "lucide-react-native";
 import { useState } from "react";
 import { FlatList, RefreshControl, Text, View } from "react-native";
 import { UserCard } from "./components/UserCard";
-import { UserSchemaWithId } from "./form/userSchema";
 
 export function UserDashboard() {
-  const { data, isLoading, refetch } = useApiQuery<UserSchemaWithId[]>(
+  const { data, isLoading, refetch } = useApiQuery<any[]>(
     ["users"],
     "/accounts/v1/users/"
   );
@@ -44,9 +43,7 @@ export function UserDashboard() {
             role={"Admin"}
             position={"Project Manager"}
             key={item.id}
-            img={
-              "https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-            }
+            img={item.profile_picture.file}
           />
         )}
         ListEmptyComponent={<Text>No data</Text>}

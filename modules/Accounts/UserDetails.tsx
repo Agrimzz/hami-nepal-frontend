@@ -25,18 +25,20 @@ export function UserDetails() {
     }
   }, [user, id]);
 
+  // console.log(user);
+
   const details = [
     { key: "Full Name", value: user?.full_name },
     { key: "Email", value: user?.email },
-    { key: "Address", value: "Kathmandu, Nepal" },
-    { key: "Phone", value: "+977 1234567890" },
-    { key: "Company", value: "Haminepal" },
-    { key: "Position", value: "Project Manager" },
-    { key: "Profession", value: "Accountant" },
-    { key: "Joined", value: "2022" },
-    { key: "Role", value: "Admin" },
-    { key: "Status", value: "Active" },
-    { key: "Language", value: "English" },
+    { key: "Address", value: user?.address },
+    { key: "Phone", value: user?.phone_number },
+    { key: "City", value: user?.city },
+    { key: "State", value: user?.state },
+    { key: "Country", value: user?.country },
+    { key: "Postal Code", value: user?.postal_code },
+    { key: "Skills", value: user?.skills },
+    { key: "Joined", value: new Date(user?.date_joined).toLocaleDateString() },
+    { key: "Bio", value: user?.bio },
   ];
 
   const queryClient = useQueryClient();
@@ -81,9 +83,7 @@ export function UserDetails() {
       <View className="w-full mt-4 gap-4">
         <View className="relative">
           <Image
-            source={{
-              uri: "https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-            }}
+            source={{ uri: user?.profile_picture?.file }}
             className="w-full h-[400] rounded-2xl "
           />
           <View className="p-2 bg-primary/30 absolute bottom-2 right-2 rounded-full">

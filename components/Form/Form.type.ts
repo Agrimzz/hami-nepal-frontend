@@ -17,3 +17,17 @@ export type CustomButtonProps = {
   textStyles?: string;
   isLoading?: boolean;
 };
+
+export type Option = {
+  label: string;
+  value: string | number;
+};
+
+export type SelectBottomSheetProps = {
+  options: Option[] | undefined;
+  onChange: (value: Option | (string | number)[]) => void;
+  title?: string;
+  placeholder?: string;
+  error?: string;
+  multiple?: boolean;
+};
