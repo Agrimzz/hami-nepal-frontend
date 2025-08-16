@@ -14,42 +14,60 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import { userSchema, UserSchema } from "./userSchema";
+import {
+  UserCreateSchema,
+  userCreateSchema,
+  UserEditSchema,
+  userEditSchema,
+  UserSchemaWithId,
+} from "./userSchema";
 
-export function UserForm() {
+type UserFormProps = {
+  initialData?: UserSchemaWithId;
+};
+
+export function UserForm({ initialData }: UserFormProps) {
+  const { setRoutePath } = useContext(AltLayoutRouteContext);
+
+  useEffect(() => {
+    setRoutePath(initialData ? "Roles / Edit" : "Roles / New");
+  }, [initialData]);
+
+  const isEdit = Boolean(initialData);
+  const schema = isEdit ? userEditSchema : userCreateSchema;
+
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<UserSchema>({
-    resolver: zodResolver(userSchema),
-    defaultValues: {
+  } = useForm<UserCreateSchema | UserEditSchema>({
+    resolver: zodResolver(schema),
+    defaultValues: initialData || {
       full_name: "",
       email: "",
       password: "",
     },
   });
 
-  const { mutate: createUser, isPending } = useApiMutation(
-    "post",
-    "/accounts/v1/users/"
+  const { mutate: saveUser, isPending } = useApiMutation(
+    isEdit ? "patch" : "post",
+    isEdit ? `/accounts/v1/users/${initialData?.id}/` : "/accounts/v1/users/"
   );
 
-  const { setRoutePath } = useContext(AltLayoutRouteContext);
-  useEffect(() => {
-    setRoutePath("Users / New");
-  }, []);
-
-  const onSubmit = (data: UserSchema) => {
-    createUser(data, {
+  const onSubmit = (data: UserCreateSchema | UserEditSchema) => {
+    saveUser(data, {
       onSuccess: () => {
+        isEdit && router.back();
         router.replace("/accounts");
 
-        Alert.alert("Success", "User created successfully");
+        Alert.alert(
+          "Success",
+          `User ${isEdit ? "updated" : "created"} successfully`
+        );
       },
       onError: (err: any) => {
         console.error("Create User Error:", err);
-        Alert.alert("Error", "Failed to create user");
+        Alert.alert("Error", `Failed to ${isEdit ? "update" : "create"} user`);
       },
     });
   };
@@ -95,23 +113,25 @@ export function UserForm() {
               )}
             />
 
-            <Controller
-              control={control}
-              name="password"
-              render={({ field: { onChange, value } }) => (
-                <FormField
-                  title="Password"
-                  placeholder="******"
-                  value={value}
-                  type="password"
-                  handleChangeText={onChange}
-                  error={errors.password?.message}
-                />
-              )}
-            />
+            {!isEdit && (
+              <Controller
+                control={control}
+                name="password"
+                render={({ field: { onChange, value } }) => (
+                  <FormField
+                    title="Password"
+                    placeholder="******"
+                    value={value}
+                    type="password"
+                    handleChangeText={onChange}
+                    error={errors.password?.message}
+                  />
+                )}
+              />
+            )}
 
             <CustomButton
-              title="Create User"
+              title={isEdit ? "Update User" : "Create User"}
               handlePress={handleSubmit(onSubmit)}
               isLoading={isPending}
               containerStyles="mt-4"

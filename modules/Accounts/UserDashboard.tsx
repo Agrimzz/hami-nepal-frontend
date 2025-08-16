@@ -39,6 +39,7 @@ export function UserDashboard() {
         className=""
         renderItem={({ item }) => (
           <UserCard
+            id={item.id}
             name={item.full_name}
             role={"Admin"}
             position={"Project Manager"}

@@ -61,7 +61,7 @@ export function RolesDashboard() {
         renderItem={({ item }) => (
           <Pressable
             className="w-full bg-gray/50 rounded-xl p-6 mt-2 flex flex-row justify-between items-center"
-            onPress={() => router.push(`/forms/roles/edit/${item.id}`)}
+            onPress={() => router.push(`/forms/roles/edit/${item.id}` as any)}
           >
             <View>
               <Text className="text-white text-base font-pbold">

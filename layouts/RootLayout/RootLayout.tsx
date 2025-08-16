@@ -57,6 +57,8 @@ export function RootLayout() {
           <Stack.Screen name="(root)/accounts" />
           <Stack.Screen name="(root)/accounts/index" />
           <Stack.Screen name="(root)/accounts/new" />
+          <Stack.Screen name="(alt)/forms/accounts" />
+          <Stack.Screen name="(alt)/forms/roles" />
           {/* 
         <Stack.Screen
         name="inventory/(general)"

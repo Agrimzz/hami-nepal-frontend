@@ -1,9 +1,15 @@
+import { router } from "expo-router";
 import { Award } from "lucide-react-native";
-import { Image, Text, View } from "react-native";
+import { Image, Pressable, Text, View } from "react-native";
 
-export function UserCard({ name, role, position, img }: any) {
+export function UserCard({ id, name, role, position, img }: any) {
   return (
-    <View className="w-full bg-gray/50 rounded-2xl h-[180px] px-6 mt-2 flex flex-row justify-between items-start">
+    <Pressable
+      className="w-full bg-gray/50 rounded-2xl h-[180px] px-6 mt-2 flex flex-row justify-between items-start"
+      onPress={() => {
+        router.push(`/details/users/${id}`);
+      }}
+    >
       <View className="flex justify-between py-4 h-full">
         <View className="flex gap-2 items-start ">
           <View className="p-2 bg-primary/20 rounded-full ">
@@ -38,6 +44,6 @@ export function UserCard({ name, role, position, img }: any) {
           className="w-[120] h-[120] rounded-full mt-8"
         />
       </View>
-    </View>
+    </Pressable>
   );
 }

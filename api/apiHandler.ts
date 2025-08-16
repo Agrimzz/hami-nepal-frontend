@@ -4,6 +4,8 @@ import {
   getRefreshToken,
   saveTokens,
 } from "@/utils/storage";
+import { router } from "expo-router";
+import { Alert } from "react-native";
 import { api } from "./client";
 
 export const apiHandler = async (requestFn: () => Promise<any>) => {
@@ -12,6 +14,7 @@ export const apiHandler = async (requestFn: () => Promise<any>) => {
     return response;
   } catch (error: any) {
     if (error.response?.status === 401) {
+      console.log("Session expired. Refreshing token...");
       try {
         const refreshToken = await getRefreshToken();
         if (!refreshToken) throw new Error("No refresh token");
@@ -29,6 +32,8 @@ export const apiHandler = async (requestFn: () => Promise<any>) => {
         return await api.request(error.config);
       } catch (refreshError: any) {
         await clearTokens();
+        Alert.alert("Error", "Session expired. Please log in again.");
+        router.replace("/");
         throw new Error("Session expired. Please log in again.");
       }
     }
