@@ -343,6 +343,7 @@ export function UserForm({ initialData }: UserFormProps) {
                         onPress={() => {
                           setPreviewUri(null);
                           field.onChange(null);
+                          setValue("profile_picture_id", "");
                         }}
                         className="absolute top-2 right-2 bg-black/60 p-2 rounded-full"
                       >
@@ -499,6 +500,7 @@ export function UserForm({ initialData }: UserFormProps) {
                   <FormField
                     title="Zip Code"
                     placeholder="Enter zip code"
+                    type="number"
                     value={value}
                     handleChangeText={onChange}
                     error={errors.zip_code?.message}

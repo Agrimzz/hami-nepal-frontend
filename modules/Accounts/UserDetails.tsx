@@ -1,5 +1,6 @@
 import { apiHandler } from "@/api/apiHandler";
 import { api } from "@/api/client";
+import images from "@/constants/images";
 import { useApiQuery } from "@/hooks/useApiQuery";
 import AltLayoutRouteContext from "@/layouts/AltLayout/context/AltLayoutRoute.context";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -83,8 +84,13 @@ export function UserDetails() {
       <View className="w-full mt-4 gap-4">
         <View className="relative">
           <Image
-            source={{ uri: user?.profile_picture?.file }}
+            source={
+              user?.profile_picture?.file
+                ? { uri: user?.profile_picture?.file }
+                : images.logo1
+            }
             className="w-full h-[400] rounded-2xl "
+            resizeMode={user?.profile_picture?.file ? "cover" : "contain"}
           />
           <View className="p-2 bg-primary/30 absolute bottom-2 right-2 rounded-full">
             <Text className="text-primary uppercase text-sm font-psemibold">

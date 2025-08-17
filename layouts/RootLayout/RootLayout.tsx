@@ -51,16 +51,9 @@ export function RootLayout() {
         <BottomSheetModalProvider>
           <Stack screenOptions={{ headerShown: false }}>
             <Stack.Screen name="index" />
-            <Stack.Screen name="(auth)/index" />
-            <Stack.Screen name="(root)/dashboard" />
-            <Stack.Screen name="(root)/inventory" />
-            <Stack.Screen name="(root)/causes/index" />
-            <Stack.Screen name="(root)/causes/new" />
-            <Stack.Screen name="(root)/accounts" />
-            <Stack.Screen name="(root)/accounts/index" />
-            <Stack.Screen name="(root)/accounts/new" />
-            <Stack.Screen name="(alt)/forms/accounts" />
-            <Stack.Screen name="(alt)/forms/roles" />
+            <Stack.Screen name="(auth)/login" />
+            <Stack.Screen name="(root)" />
+            <Stack.Screen name="(alt)" />
           </Stack>
         </BottomSheetModalProvider>
       </GestureHandlerRootView>

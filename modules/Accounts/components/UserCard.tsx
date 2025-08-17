@@ -1,3 +1,4 @@
+import images from "@/constants/images";
 import { router } from "expo-router";
 import { Award } from "lucide-react-native";
 import { Image, Pressable, Text, View } from "react-native";
@@ -40,7 +41,7 @@ export function UserCard({ id, name, role, position, img }: any) {
 
       <View className="bg-primary w-[120] h-[45%]">
         <Image
-          source={{ uri: img }}
+          source={img ? { uri: img } : images.logo1}
           className="w-[120] h-[120] rounded-full mt-8"
         />
       </View>

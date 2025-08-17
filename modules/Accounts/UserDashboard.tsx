@@ -43,7 +43,7 @@ export function UserDashboard() {
             role={"Admin"}
             position={"Project Manager"}
             key={item.id}
-            img={item.profile_picture.file}
+            img={item?.profile_picture?.file}
           />
         )}
         ListEmptyComponent={<Text>No data</Text>}
