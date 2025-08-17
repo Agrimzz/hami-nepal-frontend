@@ -100,8 +100,6 @@ export function UserForm({ initialData }: UserFormProps) {
   );
 
   const onSubmit = (data: UserCreateSchema | UserEditSchema) => {
-    console.log("----------------");
-    console.log(data);
     saveUser(data, {
       onSuccess: () => {
         isEdit && router.back();

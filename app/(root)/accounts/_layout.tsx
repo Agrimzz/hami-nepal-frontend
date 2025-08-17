@@ -4,6 +4,6 @@ const tabRoutes = {
   users: "/accounts",
   roles: "/accounts/roles",
 } as const;
-export default function AccountsPage() {
+export default function AccountsScreen() {
   return <TabLayout title="Users" tabs={tabs} tabRoutes={tabRoutes} />;
 }

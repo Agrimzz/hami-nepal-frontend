@@ -27,7 +27,7 @@ export const userEditSchema = z.object({
   city: z.string().optional(),
   state: z.string().optional(),
   country: z.string().optional(),
-  postal_code: z.string().nullable().optional(),
+  zip_code: z.string().optional(),
   skills: z.string().optional(),
   bio: z.string().optional(),
   profile_picture: z

@@ -2,7 +2,7 @@ import { Plus } from "lucide-react-native";
 import React from "react";
 import { Pressable } from "react-native";
 
-const AddButton = ({ onPress }: { onPress?: () => void }) => {
+export const AddButton = ({ onPress }: { onPress?: () => void }) => {
   return (
     <Pressable
       className="w-16 h-16 bg-primary rounded-full justify-center items-center absolute bottom-4 right-4 z-50"
@@ -12,5 +12,3 @@ const AddButton = ({ onPress }: { onPress?: () => void }) => {
     </Pressable>
   );
 };
-
-export default AddButton;
