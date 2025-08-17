@@ -146,6 +146,11 @@ export function RolesForm({ initialData }: RolesFormProps) {
                     Permissions this role should have
                   </Text>
                 </View>
+                {errors.permissions?.message && (
+                  <Text className="text-red-500 text-sm mb-2">
+                    {errors.permissions?.message}
+                  </Text>
+                )}
               </View>
             }
           />
