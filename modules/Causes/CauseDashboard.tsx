@@ -1,47 +1,62 @@
-import { CustomButton } from "@/components";
+import { DataList } from "@/components";
+import { useDelete } from "@/hooks/useDelete";
 import { router } from "expo-router";
-import { Pressable, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { CausesCard } from "./components/CausesCard";
-import { useFetchCauses } from "./hooks/useFetchCauses";
-export function CauseDashboard() {
-  const { data, isLoading } = useFetchCauses();
-  if (isLoading) {
-    return (
-      <SafeAreaView className="bg-background h-full flex items-center justify-center">
-        <Text className="text-white">Loading...</Text>
-      </SafeAreaView>
-    );
-  }
-  return (
-    <SafeAreaView className="bg-background h-full">
-      <View className="mt-4 px-4 flex flex-row items-center justify-between">
-        <Text className="text-5xl font-pmedium text-white ">Causes</Text>
-        <CustomButton
-          title="Create Cause"
-          handlePress={() => {
-            router.push("/causes/new");
-          }}
-          containerStyles="px-4"
-          textStyles="text-sm font-pbold"
-        />
-      </View>
+import { Trash } from "lucide-react-native";
+import { Alert, Pressable, Text, View } from "react-native";
 
-      <View className="mt-4 px-4 flex gap-2">
-        {data?.map((cause: any) => (
-          <Pressable
-            key={cause.id}
-            onPress={() => router.push(`/cause/${cause.id}`)}
-          >
-            <CausesCard
-              title={cause.title}
-              description={cause.description}
-              category={cause.category}
-              status={cause.status}
-            />
-          </Pressable>
-        ))}
-      </View>
-    </SafeAreaView>
+export function CauseDashboard() {
+  const { mutate: deleteCause, isPending } = useDelete("/causes/v1/causes/", [
+    "causes",
+  ]);
+
+  const handleDelete = (id: number) => {
+    Alert.alert(
+      "Confirm Delete",
+      "Are you sure you want to delete this donation?",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: () => deleteCause(id),
+        },
+      ]
+    );
+  };
+  return (
+    <DataList<any>
+      queryKey={["causes"]}
+      endpoint="/causes/v1/causes/"
+      renderItem={(item) => (
+        <Pressable
+          className="w-full p-4 bg-gray/50 rounded-xl mt-2 gap-4 items-start"
+          onPress={() => router.push(`/forms/causes/edit/${item.id}` as any)}
+        >
+          <View className="w-full flex flex-row justify-between items-start">
+            <View className="p-2 rounded-xl bg-primary/20">
+              <Text className="text-primary font-psemibold capitalize text-sm">
+                {item.category}
+              </Text>
+            </View>
+            <Pressable
+              className="p-2 rounded-xl bg-primary/20"
+              onPress={() => handleDelete(item.id)}
+            >
+              <Trash size={16} color="#CC343B" />
+            </Pressable>
+          </View>
+          <View className="w-full">
+            <Text className="text-xl text-white font-pbold">{item.title}</Text>
+            <Text className="text-xs text-lightgray font-psemibold">
+              {item.status}
+            </Text>
+            <Text className="text-sm text-white font-pregular mt-2">
+              {item.description}
+            </Text>
+          </View>
+        </Pressable>
+      )}
+      addButtonPath="/forms/causes/new"
+    />
   );
 }

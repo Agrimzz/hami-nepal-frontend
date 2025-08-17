@@ -1,6 +1,9 @@
 import { CustomButton, FormField } from "@/components";
+import { useApiMutation } from "@/hooks/useApiMutation";
+import AltLayoutRouteContext from "@/layouts/AltLayout/context/AltLayoutRoute.context";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { router } from "expo-router";
+import { useContext, useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
   Alert,
@@ -11,17 +14,35 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import { useCreateCause } from "../hooks/useCreateCuase";
-import { causeSchema, CauseSchema } from "./causeSchema";
+import {
+  CauseCreateSchema,
+  causeCreateSchema,
+  CauseEditSchema,
+  causeEditSchema,
+  CauseSchemaWithId,
+} from "./causeSchema";
 
-export function CauseForm() {
+export function CauseForm({
+  initialData,
+}: {
+  initialData?: CauseSchemaWithId;
+}) {
+  const { setRoutePath } = useContext(AltLayoutRouteContext);
+  console.log(initialData);
+
+  const isEdit = Boolean(initialData);
+  const schema = isEdit ? causeEditSchema : causeCreateSchema;
+
+  useEffect(() => {
+    setRoutePath(initialData ? "Causes / Edit" : "Causes / New");
+  }, [initialData, setRoutePath]);
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<CauseSchema>({
-    resolver: zodResolver(causeSchema),
-    defaultValues: {
+  } = useForm<CauseCreateSchema | CauseEditSchema>({
+    resolver: zodResolver(schema),
+    defaultValues: initialData || {
       title: "",
       description: "",
       category: "",
@@ -29,18 +50,24 @@ export function CauseForm() {
     },
   });
 
-  const { mutate: createCause, isPending } = useCreateCause();
+  const { mutate: saveCause, isPending } = useApiMutation(
+    isEdit ? "patch" : "post",
+    isEdit ? `/causes/v1/causes/${initialData?.id}/` : "/causes/v1/causes/"
+  );
 
-  const onSubmit = (data: CauseSchema) => {
-    createCause(data, {
+  const onSubmit = (data: CauseCreateSchema | CauseEditSchema) => {
+    saveCause(data, {
       onSuccess: () => {
         router.push("/causes");
 
-        Alert.alert("Success", "Cause created successfully");
+        Alert.alert(
+          "Success",
+          `Cause ${isEdit ? "updated" : "created"} successfully`
+        );
       },
       onError: (err: any) => {
         console.error("Create Cause Error:", err);
-        Alert.alert("Error", "Failed to create cause");
+        Alert.alert("Error", `Failed to ${isEdit ? "update" : "create"} cause`);
       },
     });
   };
