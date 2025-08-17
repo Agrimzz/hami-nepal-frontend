@@ -3,6 +3,7 @@ import {
   BottomSheetModal,
   BottomSheetScrollView,
 } from "@gorhom/bottom-sheet";
+import { ChevronDown } from "lucide-react-native";
 import React, { useCallback, useRef } from "react";
 import { Pressable, Text, TouchableOpacity, View } from "react-native";
 
@@ -53,22 +54,26 @@ export function SelectBottomSheet({
         className="w-full min-h-[50px] px-4 py-4 rounded-xl border border-white/5 bg-white/5"
       >
         <Text className="text-lightgray text-xs font-pregular">{title}</Text>
-        <Text
-          className={`${
-            value && (Array.isArray(value) ? value.length > 0 : value !== "")
-              ? "text-white"
-              : "text-white/70"
-          } mt-2 font-pregular`}
-        >
-          {Array.isArray(value) && value.length
-            ? options
-                .filter((o) => value.includes(o.value))
-                .map((o) => o.label)
-                .join(", ")
-            : typeof value === "string" || typeof value === "number"
-              ? options.find((o) => o.value === value)?.label
-              : placeholder || "Select..."}
-        </Text>
+        <View className="flex flex-row items-center justify-between mt-2">
+          <Text
+            className={`${
+              value && (Array.isArray(value) ? value.length > 0 : value !== "")
+                ? "text-white"
+                : "text-white/70"
+            }  font-pregular`}
+          >
+            {Array.isArray(value) && value.length
+              ? options
+                  .filter((o) => value.includes(o.value))
+                  .map((o) => o.label)
+                  .join(", ")
+              : typeof value === "string" || typeof value === "number"
+                ? options.find((o) => o.value === value)?.label
+                : placeholder || "Select..."}
+          </Text>
+
+          <ChevronDown size={16} color="white" />
+        </View>
       </Pressable>
 
       {/* Bottom sheet modal */}

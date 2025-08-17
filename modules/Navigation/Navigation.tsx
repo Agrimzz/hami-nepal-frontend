@@ -9,7 +9,7 @@ export function Navigation({ toggleDrawer }: { toggleDrawer: () => void }) {
   const pathname = usePathname();
 
   return (
-    <SafeAreaView className="flex-1 absolute inset-0 bg-black p-4">
+    <SafeAreaView className="flex-1 absolute inset-0 bg-black p-4 z-50">
       <View className="w-full bg-gray p-2 rounded-2xl flex flex-row justify-between items-center">
         <View className="bg-lightgray/50 p-2 rounded-full">
           <User size={24} color="white" fill="white" />

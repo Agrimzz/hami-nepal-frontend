@@ -40,20 +40,51 @@ export function Donations() {
                 {item.type}
               </Text>
             </View>
-            <Text className="text-lightgray font-psemibold text-xs">
-              {new Date(item.donated_at as string).toLocaleDateString()}
-            </Text>
-          </View>
-          <View className="w-full flex flex-row justify-between items-center">
-            <Text className="text-3xl text-white font-pbold">
-              Rs.{item.amount}
-            </Text>
             <Pressable
               className="p-2 rounded-xl bg-primary/20"
               onPress={() => handleDelete(item.id)}
             >
               <Trash size={16} color="#CC343B" />
             </Pressable>
+          </View>
+          <View className="w-full flex flex-row justify-between items-center">
+            <Text className="text-3xl text-white font-pbold">
+              Rs.{item.amount}
+            </Text>
+          </View>
+          <View className="w-full mt-2 gap-2 ">
+            <View className="flex flex-row items-center">
+              <Text className="w-28 text-xs text-white/60 font-psemibold">
+                Donor Name
+              </Text>
+              <Text className="flex-1 text-sm text-white font-pbold">
+                {item.source_name}
+              </Text>
+            </View>
+            <View className="flex flex-row items-center">
+              <Text className="w-28 text-xs text-white/60 font-psemibold">
+                Donor Contact
+              </Text>
+              <Text className="flex-1 text-sm text-white font-pbold">
+                {item.source_phone}
+              </Text>
+            </View>
+            <View className="flex flex-row items-center">
+              <Text className="w-28 text-xs text-white/60 font-psemibold">
+                Donor Email
+              </Text>
+              <Text className="flex-1 text-sm text-white font-pbold">
+                {item.source_email}
+              </Text>
+            </View>
+            <View className="flex flex-row items-center">
+              <Text className="w-28 text-xs text-white/60 font-psemibold">
+                Remarks
+              </Text>
+              <Text className="flex-1 text-sm text-white font-pbold">
+                {item.remarks}
+              </Text>
+            </View>
           </View>
         </Pressable>
       )}

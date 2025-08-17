@@ -46,6 +46,10 @@ export function DonationForm({
     defaultValues: initialData || {
       type: "fund",
       amount: "",
+      remarks: "",
+      source_name: "",
+      source_email: "",
+      source_phone: "",
     },
   });
 
@@ -96,10 +100,9 @@ export function DonationForm({
                   Donation Details
                 </Text>
                 <Text className="text-xs text-lightgray font-pbold">
-                  Add a donation
+                  Information about the donation
                 </Text>
               </View>
-
               <Controller
                 control={control}
                 name="type"
@@ -116,7 +119,6 @@ export function DonationForm({
                   />
                 )}
               />
-
               <Controller
                 control={control}
                 name="amount"
@@ -125,20 +127,88 @@ export function DonationForm({
                     title="Amount"
                     placeholder="Enter amount"
                     value={value}
-                    type="decimal"
+                    type="number"
                     handleChangeText={onChange}
                     error={errors.amount?.message}
                   />
                 )}
               />
 
-              <CustomButton
-                title="Save"
-                handlePress={handleSubmit(onSubmit)}
-                isLoading={isPending}
-                containerStyles="mt-4"
+              <Controller
+                control={control}
+                name="remarks"
+                render={({ field: { onChange, value } }) => (
+                  <FormField
+                    title="Remarks"
+                    placeholder="Enter remarks"
+                    value={value}
+                    handleChangeText={onChange}
+                    error={errors.remarks?.message}
+                  />
+                )}
               />
             </View>
+
+            <View className="gap-2">
+              <View className="flex flex-row justify-between items-center">
+                <Text className="text-white font-pbold text-lg">
+                  Donor Details
+                </Text>
+                <Text className="text-xs text-lightgray font-pbold">
+                  Basic information of the donor
+                </Text>
+              </View>
+
+              <Controller
+                control={control}
+                name="source_name"
+                render={({ field: { onChange, value } }) => (
+                  <FormField
+                    title="Name"
+                    placeholder="Enter name"
+                    value={value}
+                    handleChangeText={onChange}
+                    error={errors.source_name?.message}
+                  />
+                )}
+              />
+
+              <Controller
+                control={control}
+                name="source_email"
+                render={({ field: { onChange, value } }) => (
+                  <FormField
+                    title="Email"
+                    placeholder="Enter email"
+                    value={value}
+                    type="email"
+                    handleChangeText={onChange}
+                    error={errors.source_email?.message}
+                  />
+                )}
+              />
+
+              <Controller
+                control={control}
+                name="source_phone"
+                render={({ field: { onChange, value } }) => (
+                  <FormField
+                    title="Phone Number"
+                    placeholder="Enter phone number"
+                    value={value}
+                    type="phone"
+                    handleChangeText={onChange}
+                    error={errors.source_phone?.message}
+                  />
+                )}
+              />
+            </View>
+            <CustomButton
+              title="Save"
+              handlePress={handleSubmit(onSubmit)}
+              isLoading={isPending}
+              containerStyles="mt-4"
+            />
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
