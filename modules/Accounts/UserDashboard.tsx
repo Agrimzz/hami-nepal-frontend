@@ -12,7 +12,7 @@ export function UserDashboard() {
         <UserCard
           id={item.id}
           name={item.full_name}
-          role={item.groups?.[0]?.name ?? "Member"}
+          user_type={item.user_type}
           address={item?.address ?? "Nepal"}
           img={item.profile_picture?.file}
         />

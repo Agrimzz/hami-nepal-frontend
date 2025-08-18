@@ -94,7 +94,7 @@ export function UserDetails() {
           />
           <View className="p-2 bg-primary/30 absolute bottom-2 right-2 rounded-full">
             <Text className="text-primary uppercase text-sm font-psemibold">
-              {user?.groups ? user?.groups[0]?.name : "Member"}
+              {user?.user_type}
             </Text>
           </View>
         </View>

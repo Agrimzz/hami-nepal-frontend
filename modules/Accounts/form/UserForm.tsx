@@ -37,7 +37,6 @@ type UserFormProps = {
 };
 
 export function UserForm({ initialData }: UserFormProps) {
-  console.log(initialData);
   const { setRoutePath } = useContext(AltLayoutRouteContext);
 
   const [previewUri, setPreviewUri] = useState<string | null>(
@@ -74,7 +73,7 @@ export function UserForm({ initialData }: UserFormProps) {
           bio: normalize(initialData.bio),
           profile_picture_id: normalize(initialData.profile_picture?.id),
           group_ids: initialData?.groups?.map((group) => group.id) ?? [],
-          type: initialData?.type ?? "volunteer",
+          user_type: initialData?.user_type ?? "volunteer",
         }
       : {
           full_name: "",
@@ -90,7 +89,7 @@ export function UserForm({ initialData }: UserFormProps) {
           bio: "",
           profile_picture_id: "",
           group_ids: [],
-          type: "volunteer",
+          user_type: "volunteer",
         },
   });
 
@@ -574,7 +573,7 @@ export function UserForm({ initialData }: UserFormProps) {
 
               <Controller
                 control={control}
-                name="type"
+                name="user_type"
                 render={({ field }) => (
                   <SelectBottomSheet
                     options={[
