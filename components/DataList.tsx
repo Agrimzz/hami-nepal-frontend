@@ -1,9 +1,9 @@
-import { AddButton } from "@/components";
 import { useApiQuery } from "@/hooks/useApiQuery";
 import { router } from "expo-router";
 import { LoaderCircle } from "lucide-react-native";
 import { useState } from "react";
 import { FlatList, RefreshControl, Text, View } from "react-native";
+import { AddButton } from "./AddButton";
 import { DataListProps } from "./DataList.type";
 export function DataList<T>({
   queryKey,

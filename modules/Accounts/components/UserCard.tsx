@@ -42,7 +42,7 @@ export function UserCard({ id, name, role, position, img }: any) {
       <View className="bg-primary w-[120] h-[45%]">
         <Image
           source={img ? { uri: img } : images.logo1}
-          className="w-[120] h-[120] rounded-full mt-8"
+          className="w-[120] h-[120] rounded-full mt-7"
         />
       </View>
     </Pressable>

@@ -38,6 +38,7 @@ export const userEditSchema = z.object({
     })
     .nullable()
     .optional(),
+  profile_picture_id: z.string().optional(),
   group_ids: z.array(z.any()).optional(), // backend sends empty array
   groups: z.array(z.any()).optional(),
   achievements: z.array(z.any()).optional(),

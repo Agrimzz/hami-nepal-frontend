@@ -36,7 +36,7 @@ export function UserDetails() {
     { key: "City", value: user?.city },
     { key: "State", value: user?.state },
     { key: "Country", value: user?.country },
-    { key: "Postal Code", value: user?.postal_code },
+    { key: "ZIP Code", value: user?.zip_code },
     { key: "Skills", value: user?.skills },
     { key: "Joined", value: new Date(user?.date_joined).toLocaleDateString() },
     { key: "Bio", value: user?.bio },
@@ -94,7 +94,7 @@ export function UserDetails() {
           />
           <View className="p-2 bg-primary/30 absolute bottom-2 right-2 rounded-full">
             <Text className="text-primary uppercase text-sm font-psemibold">
-              admin
+              {user?.groups[0]?.name ?? "Member"}
             </Text>
           </View>
         </View>

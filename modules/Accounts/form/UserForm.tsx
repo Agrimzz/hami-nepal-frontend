@@ -50,6 +50,7 @@ export function UserForm({ initialData }: UserFormProps) {
   const isEdit = Boolean(initialData);
   const schema = isEdit ? userEditSchema : userCreateSchema;
 
+  const normalize = (value: any) => (value === null ? "" : value);
   const {
     control,
     handleSubmit,
@@ -60,7 +61,18 @@ export function UserForm({ initialData }: UserFormProps) {
     defaultValues: initialData
       ? {
           ...initialData,
-          group_ids: initialData?.groups?.map((group) => group.id),
+          full_name: normalize(initialData.full_name),
+          email: normalize(initialData.email),
+          phone_number: normalize(initialData.phone_number),
+          address: normalize(initialData.address),
+          city: normalize(initialData.city),
+          state: normalize(initialData.state),
+          country: normalize(initialData.country),
+          zip_code: normalize(initialData.zip_code),
+          skills: normalize(initialData.skills),
+          bio: normalize(initialData.bio),
+          profile_picture_id: normalize(initialData.profile_picture_id),
+          group_ids: initialData?.groups?.map((group) => group.id) ?? [],
         }
       : {
           full_name: "",
@@ -74,8 +86,8 @@ export function UserForm({ initialData }: UserFormProps) {
           zip_code: "",
           skills: "",
           bio: "",
+          profile_picture_id: "",
           group_ids: [],
-          profile_picture_id: "", // added for image
         },
   });
 

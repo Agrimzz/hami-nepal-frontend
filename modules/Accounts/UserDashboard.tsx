@@ -12,7 +12,7 @@ export function UserDashboard() {
         <UserCard
           id={item.id}
           name={item.full_name}
-          role="Admin"
+          role={item.groups?.[0]?.name ?? "Member"}
           position="Project Manager"
           img={item.profile_picture?.file}
         />
