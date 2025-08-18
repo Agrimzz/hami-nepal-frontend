@@ -3,6 +3,7 @@ import { useDelete } from "@/hooks/useDelete";
 import { router } from "expo-router";
 import { Trash } from "lucide-react-native";
 import { Alert, Pressable, Text, View } from "react-native";
+import { EventSchemaWithId } from "./form/eventSchema";
 
 export function Events() {
   const { mutate: deleteEvent, isPending } = useDelete("/causes/v1/events/", [
@@ -24,7 +25,7 @@ export function Events() {
     );
   };
   return (
-    <DataList<any>
+    <DataList<EventSchemaWithId>
       queryKey={["events"]}
       endpoint="/causes/v1/events/"
       renderItem={(item) => (

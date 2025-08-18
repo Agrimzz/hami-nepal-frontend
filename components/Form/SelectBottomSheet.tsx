@@ -22,6 +22,8 @@ type Props = {
   onChange: (val: string | number | (string | number)[]) => void;
   title: string;
   placeholder?: string;
+  trigger?: React.ReactNode;
+  error?: string;
 };
 
 export function SelectBottomSheet({
@@ -31,6 +33,7 @@ export function SelectBottomSheet({
   onChange,
   title,
   placeholder,
+  trigger,
 }: Props) {
   const bottomSheetRef = useRef<BottomSheetModal>(null);
 
@@ -56,33 +59,40 @@ export function SelectBottomSheet({
   return (
     <>
       {/* Trigger */}
-      <Pressable
-        onPress={open}
-        className="w-full min-h-[50px] px-4 py-4 rounded-xl border border-white/5 bg-white/5"
-      >
-        <Text className="text-lightgray text-xs font-pregular">{title}</Text>
-        <View className="flex flex-row items-center justify-between mt-2">
-          <Text
-            className={`${
-              value && (Array.isArray(value) ? value.length > 0 : value !== "")
-                ? "text-white"
-                : "text-white/70"
-            }  font-pregular`}
-          >
-            {Array.isArray(value) && value.length
-              ? options
-                  .filter((o) => value.includes(o.value))
-                  .map((o) => o.label)
-                  .join(", ")
-              : typeof value === "string" || typeof value === "number"
-                ? options.find((o) => o.value === value)?.label
-                : placeholder || "Select..."}
-          </Text>
 
-          <ChevronDown size={16} color="white" />
-        </View>
-      </Pressable>
+      {trigger ? (
+        <Pressable onPress={open} pointerEvents="box-none">
+          {trigger}
+        </Pressable>
+      ) : (
+        <Pressable
+          onPress={open}
+          className="w-full min-h-[50px] px-4 py-4 rounded-xl border border-white/5 bg-white/5"
+        >
+          <Text className="text-lightgray text-xs font-pregular">{title}</Text>
+          <View className="flex flex-row items-center justify-between mt-2">
+            <Text
+              className={`${
+                value &&
+                (Array.isArray(value) ? value.length > 0 : value !== "")
+                  ? "text-white"
+                  : "text-white/70"
+              }  font-pregular text-sm`}
+            >
+              {Array.isArray(value) && value.length
+                ? options
+                    .filter((o) => value.includes(o.value))
+                    .map((o) => o.label)
+                    .join(", ")
+                : typeof value === "string" || typeof value === "number"
+                  ? options.find((o) => o.value === value)?.label
+                  : placeholder || "Select..."}
+            </Text>
 
+            <ChevronDown size={16} color="white" />
+          </View>
+        </Pressable>
+      )}
       {/* Bottom sheet modal */}
       <BottomSheetModal
         ref={bottomSheetRef}
@@ -95,7 +105,7 @@ export function SelectBottomSheet({
       >
         <BottomSheetScrollView className="p-4">
           <Text className="w-full text-center text-lg font-psemibold text-white border-b border-white/20 pb-2">
-            Select Roles
+            {title}
           </Text>
 
           {options.map((opt) => {

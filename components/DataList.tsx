@@ -9,8 +9,11 @@ export function DataList<T>({
   queryKey,
   endpoint,
   renderItem,
+  ListHeaderComponent,
   ListEmptyComponent = () => <Text>No data</Text>,
   addButtonPath,
+  containerStyles,
+  disablePadding = false,
 }: DataListProps<T>) {
   const { data, isLoading, refetch } = useApiQuery<T[]>(queryKey, endpoint);
 
@@ -35,12 +38,15 @@ export function DataList<T>({
   }
 
   return (
-    <View className="flex-1 px-4 relative">
+    <View
+      className={`flex-1 relative ${disablePadding ? "p-0" : "px-4"} ${containerStyles}`}
+    >
       <FlatList
         data={data}
         keyExtractor={(item, index) => index.toString()}
         showsVerticalScrollIndicator={false}
         renderItem={({ item }) => renderItem(item) as any}
+        ListHeaderComponent={ListHeaderComponent as any}
         ListEmptyComponent={ListEmptyComponent as any}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />

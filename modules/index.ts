@@ -8,3 +8,4 @@ export * from "./Inventory";
 export * from "./Navigation";
 export * from "./Onboard";
 export * from "./Roles";
+export * from "./Tasks";
