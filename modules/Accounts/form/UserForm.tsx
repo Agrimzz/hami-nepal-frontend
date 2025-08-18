@@ -37,6 +37,7 @@ type UserFormProps = {
 };
 
 export function UserForm({ initialData }: UserFormProps) {
+  console.log(initialData);
   const { setRoutePath } = useContext(AltLayoutRouteContext);
 
   const [previewUri, setPreviewUri] = useState<string | null>(
@@ -71,7 +72,7 @@ export function UserForm({ initialData }: UserFormProps) {
           zip_code: normalize(initialData.zip_code),
           skills: normalize(initialData.skills),
           bio: normalize(initialData.bio),
-          profile_picture_id: normalize(initialData.profile_picture_id),
+          profile_picture_id: normalize(initialData.profile_picture?.id),
           group_ids: initialData?.groups?.map((group) => group.id) ?? [],
         }
       : {
@@ -112,6 +113,7 @@ export function UserForm({ initialData }: UserFormProps) {
   );
 
   const onSubmit = (data: UserCreateSchema | UserEditSchema) => {
+    console.log("data", data);
     saveUser(data, {
       onSuccess: () => {
         isEdit && router.back();

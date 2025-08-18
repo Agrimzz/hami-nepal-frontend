@@ -16,7 +16,7 @@ export function DataList<T>({
 
   const [refreshing, setRefreshing] = useState(false);
 
-  console.log(data);
+  // console.log(data);
 
   const onRefresh = async () => {
     setRefreshing(true);
