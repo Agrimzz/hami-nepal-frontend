@@ -16,6 +16,7 @@ export const userCreateSchema = z.object({
   bio: z.string().optional(),
   profile_picture_id: z.string().optional(),
   group_ids: z.array(z.number()).optional(),
+  type: z.string().optional(),
 });
 
 export const userEditSchema = z.object({
@@ -41,6 +42,7 @@ export const userEditSchema = z.object({
   profile_picture_id: z.string().optional(),
   group_ids: z.array(z.any()).optional(), // backend sends empty array
   groups: z.array(z.any()).optional(),
+  type: z.string().optional(),
   achievements: z.array(z.any()).optional(),
   date_joined: z.string().optional(),
   last_updated: z.string().optional(),

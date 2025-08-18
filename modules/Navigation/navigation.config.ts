@@ -4,6 +4,7 @@ import {
   Heart,
   KeyRound,
   LayoutDashboard,
+  ListTodo,
   Package,
   Truck,
   Users,
@@ -78,12 +79,12 @@ export const navConfig = [
     ],
   },
   {
-    title: "Projects",
+    title: "Tasks",
     children: [
       {
-        title: "Projects Dashboard",
-        path: "/projects",
-        icon: LayoutDashboard,
+        title: "Tasks Dashboard",
+        path: "/tasks",
+        icon: ListTodo,
       },
     ],
   },

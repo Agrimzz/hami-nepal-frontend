@@ -13,7 +13,7 @@ export function UserDashboard() {
           id={item.id}
           name={item.full_name}
           role={item.groups?.[0]?.name ?? "Member"}
-          position="Project Manager"
+          address={item?.address ?? "Nepal"}
           img={item.profile_picture?.file}
         />
       )}

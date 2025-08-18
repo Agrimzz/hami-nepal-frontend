@@ -37,6 +37,8 @@ export function DatePickerField({
 
       {showPicker && (
         <RNDateTimePicker
+          design="material"
+          minimumDate={new Date()}
           mode={mode}
           value={value ? new Date(value) : new Date()}
           onChange={(event, selectedDate) => {

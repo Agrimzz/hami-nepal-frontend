@@ -3,7 +3,7 @@ import { router } from "expo-router";
 import { Award } from "lucide-react-native";
 import { Image, Pressable, Text, View } from "react-native";
 
-export function UserCard({ id, name, role, position, img }: any) {
+export function UserCard({ id, name, role, address, img }: any) {
   return (
     <Pressable
       className="w-full bg-gray/50 rounded-2xl h-[180px] px-6 mt-2 flex flex-row justify-between items-start"
@@ -19,11 +19,14 @@ export function UserCard({ id, name, role, position, img }: any) {
             </Text>
           </View>
           <View className="">
-            <Text className="text-xl font-psemibold text-white capitalize">
+            <Text
+              className="text-xl font-psemibold text-white capitalize max-w-[170px]"
+              numberOfLines={1}
+            >
               {name}
             </Text>
             <Text className="text-xs font-plight text-lightgray">
-              {position}
+              {address}
             </Text>
           </View>
           <View className="p-2 flex flex-row items-center gap-1 bg-white/20 rounded-full">

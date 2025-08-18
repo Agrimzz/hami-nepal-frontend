@@ -74,6 +74,7 @@ export function UserForm({ initialData }: UserFormProps) {
           bio: normalize(initialData.bio),
           profile_picture_id: normalize(initialData.profile_picture?.id),
           group_ids: initialData?.groups?.map((group) => group.id) ?? [],
+          type: initialData?.type ?? "volunteer",
         }
       : {
           full_name: "",
@@ -89,6 +90,7 @@ export function UserForm({ initialData }: UserFormProps) {
           bio: "",
           profile_picture_id: "",
           group_ids: [],
+          type: "volunteer",
         },
   });
 
@@ -569,6 +571,25 @@ export function UserForm({ initialData }: UserFormProps) {
                   Assign one or more roles
                 </Text>
               </View>
+
+              <Controller
+                control={control}
+                name="type"
+                render={({ field }) => (
+                  <SelectBottomSheet
+                    options={[
+                      { label: "Admin", value: "admin" },
+                      { label: "Staff", value: "staff" },
+                      { label: "Volunteer", value: "volunteer" },
+                      { label: "Donor", value: "donor" },
+                    ]}
+                    value={field.value}
+                    placeholder="Select user type"
+                    title="Choose type"
+                    onChange={(val) => field.onChange(val)}
+                  />
+                )}
+              />
 
               <Controller
                 control={control}

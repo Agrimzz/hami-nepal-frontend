@@ -5,7 +5,7 @@ import { Pressable } from "react-native";
 export const AddButton = ({ onPress }: { onPress?: () => void }) => {
   return (
     <Pressable
-      className="w-16 h-16 bg-primary rounded-full justify-center items-center absolute bottom-4 right-4 z-50"
+      className="w-16 h-16 bg-primary rounded-2xl justify-center items-center absolute bottom-4 right-4 z-50"
       onPress={onPress}
     >
       <Plus size={20} color="#F1F1F1" />
