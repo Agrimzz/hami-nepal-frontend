@@ -5,7 +5,13 @@ import {
 } from "@gorhom/bottom-sheet";
 import { ChevronDown } from "lucide-react-native";
 import React, { useCallback, useRef } from "react";
-import { Pressable, Text, TouchableOpacity, View } from "react-native";
+import {
+  Keyboard,
+  Pressable,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 type Option = { label: string; value: string | number };
 
@@ -29,6 +35,7 @@ export function SelectBottomSheet({
   const bottomSheetRef = useRef<BottomSheetModal>(null);
 
   const open = useCallback(() => {
+    Keyboard.dismiss();
     bottomSheetRef.current?.present();
   }, []);
 
