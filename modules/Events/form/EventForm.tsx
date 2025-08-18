@@ -1,10 +1,14 @@
-import { CustomButton, FormField, SelectBottomSheet } from "@/components";
+import {
+  CustomButton,
+  DatePickerField,
+  FormField,
+  SelectBottomSheet,
+} from "@/components";
 import { useApiMutation } from "@/hooks/useApiMutation";
 import { useApiQuery } from "@/hooks/useApiQuery";
 import AltLayoutRouteContext from "@/layouts/AltLayout/context/AltLayoutRoute.context";
 import { CauseSchemaWithId } from "@/modules/Causes/form/causeSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import RNDateTimePicker from "@react-native-community/datetimepicker";
 import { router } from "expo-router";
 import { useContext, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -15,7 +19,6 @@ import {
   Platform,
   ScrollView,
   Text,
-  TouchableOpacity,
   TouchableWithoutFeedback,
   View,
 } from "react-native";
@@ -50,6 +53,8 @@ export function EventForm({
 
   const {
     control,
+    watch,
+    setValue,
     handleSubmit,
     formState: { errors },
   } = useForm<EventCreateSchema | EventEditSchema>({
@@ -68,7 +73,6 @@ export function EventForm({
     isEdit ? `/causes/v1/events/${initialData?.id}/` : "/causes/v1/events/"
   );
 
-  console.log(errors);
   const onSubmit = (data: EventCreateSchema | EventEditSchema) => {
     console.log(data);
     saveEvent(data, {
@@ -139,46 +143,12 @@ export function EventForm({
               control={control}
               name="event_date"
               render={({ field: { value, onChange } }) => (
-                <>
-                  <TouchableOpacity
-                    onPress={() => setShowDatePicker(true)}
-                    className="bg-gray/50 p-4 rounded-xl"
-                  >
-                    <Text className="text-lightgray font-pregular text-xs">
-                      Event Date
-                    </Text>
-                    <Text
-                      className={`${
-                        value ? "text-white" : "text-lightgray"
-                      } font-pregular text-sm mt-2`}
-                    >
-                      {value
-                        ? new Date(value).toLocaleDateString()
-                        : "Select Date"}
-                    </Text>
-                  </TouchableOpacity>
-
-                  {showDatePicker && (
-                    <RNDateTimePicker
-                      mode="date"
-                      value={value ? new Date(value) : new Date()}
-                      onChange={(event, selectedDate) => {
-                        setShowDatePicker(false);
-                        if (selectedDate) {
-                          onChange(selectedDate.toISOString().split("T")[0]);
-                        }
-                      }}
-                      display="default"
-                      themeVariant="dark"
-                    />
-                  )}
-
-                  {errors.event_date?.message && (
-                    <Text className="text-red-500 text-sm ml-2">
-                      {errors.event_date.message}
-                    </Text>
-                  )}
-                </>
+                <DatePickerField
+                  title="Event Date"
+                  value={watch("event_date")}
+                  onChange={(val) => setValue("event_date", val)}
+                  error={errors.event_date?.message}
+                />
               )}
             />
 

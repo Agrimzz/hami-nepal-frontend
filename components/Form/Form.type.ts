@@ -31,3 +31,13 @@ export type SelectBottomSheetProps = {
   error?: string;
   multiple?: boolean;
 };
+
+export type DatePickerFieldProps = {
+  title: string;
+  value?: string | null;
+  placeholder?: string;
+  onChange: (val: string) => void;
+  error?: string;
+  mode?: "date" | "time";
+  otherStyles?: string;
+};
