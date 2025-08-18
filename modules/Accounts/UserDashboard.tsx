@@ -13,7 +13,7 @@ export function UserDashboard() {
           id={item.id}
           name={item.full_name}
           user_type={item.user_type}
-          address={item?.address ?? "Nepal"}
+          address={item?.address}
           img={item.profile_picture?.file}
         />
       )}

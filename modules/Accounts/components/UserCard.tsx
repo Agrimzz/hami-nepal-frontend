@@ -26,7 +26,7 @@ export function UserCard({ id, name, user_type, address, img }: any) {
               {name}
             </Text>
             <Text className="text-xs font-plight text-lightgray">
-              {address}
+              {address === "" ? "Nepal" : address}
             </Text>
           </View>
           <View className="p-2 flex flex-row items-center gap-1 bg-white/20 rounded-full">
