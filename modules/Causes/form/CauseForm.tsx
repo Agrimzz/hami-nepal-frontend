@@ -104,7 +104,7 @@ export function CauseForm({
               render={({ field: { onChange, value } }) => (
                 <FormField
                   title="Description"
-                  placeholder="*Enter cause description"
+                  placeholder="Enter cause description"
                   value={value}
                   handleChangeText={onChange}
                   error={errors.description?.message}

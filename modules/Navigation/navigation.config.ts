@@ -1,4 +1,5 @@
 import {
+  CalendarHeart,
   DollarSign,
   Heart,
   KeyRound,
@@ -53,6 +54,11 @@ export const navConfig = [
         title: "Causes Dashboard",
         path: "/causes",
         icon: Heart,
+      },
+      {
+        title: "Events",
+        path: "/causes/events",
+        icon: CalendarHeart,
       },
     ],
   },

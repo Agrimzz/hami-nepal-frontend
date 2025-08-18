@@ -3,6 +3,7 @@ export * from "./Auth";
 export * from "./Causes";
 export * from "./Dashboard";
 export * from "./Donations";
+export * from "./Events";
 export * from "./Inventory";
 export * from "./Navigation";
 export * from "./Onboard";
