@@ -1,19 +1,11 @@
-import { CustomButton, FormField } from "@/components";
+import { FormField, FormSection, FormWizard } from "@/components";
 import { useApiMutation } from "@/hooks/useApiMutation";
 import AltLayoutRouteContext from "@/layouts/AltLayout/context/AltLayoutRoute.context";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { router } from "expo-router";
 import { useContext, useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
-import {
-  Alert,
-  Keyboard,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  TouchableWithoutFeedback,
-  View,
-} from "react-native";
+import { Alert } from "react-native";
 import {
   CauseCreateSchema,
   causeCreateSchema,
@@ -28,7 +20,6 @@ export function CauseForm({
   initialData?: CauseSchemaWithId;
 }) {
   const { setRoutePath } = useContext(AltLayoutRouteContext);
-  console.log(initialData);
 
   const isEdit = Boolean(initialData);
   const schema = isEdit ? causeEditSchema : causeCreateSchema;
@@ -58,7 +49,7 @@ export function CauseForm({
   const onSubmit = (data: CauseCreateSchema | CauseEditSchema) => {
     saveCause(data, {
       onSuccess: () => {
-        router.push("/causes");
+        router.replace("/causes");
 
         Alert.alert(
           "Success",
@@ -73,79 +64,96 @@ export function CauseForm({
   };
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 60 : 0}
-        style={{ flex: 1 }}
-      >
-        <ScrollView
-          style={{ flex: 1 }}
-          keyboardShouldPersistTaps="handled"
-          contentContainerStyle={{ flexGrow: 1 }}
+    <FormWizard
+      title={isEdit ? "Edit Cause" : "Create a new Cause"}
+      schema={schema}
+      defaultValues={
+        initialData || {
+          title: "",
+          description: "",
+          category: "",
+          status: "",
+        }
+      }
+      submitLabel={
+        isPending ? "Saving..." : isEdit ? "Update Cause" : "Create Cause"
+      }
+      onSubmit={onSubmit}
+      renderSections={(methods) => (
+        <FormSection
+          title="Cause Details"
+          description="Basic information of the cause"
         >
-          <View className="px-6 py-4 gap-4">
-            <Controller
-              control={control}
-              name="title"
-              render={({ field: { onChange, value } }) => (
-                <FormField
-                  title="Title"
-                  placeholder="Enter cause title"
-                  value={value}
-                  handleChangeText={onChange}
-                  error={errors.title?.message}
-                />
-              )}
-            />
-            <Controller
-              control={control}
-              name="description"
-              render={({ field: { onChange, value } }) => (
-                <FormField
-                  title="Description"
-                  placeholder="Enter cause description"
-                  value={value}
-                  handleChangeText={onChange}
-                  error={errors.description?.message}
-                />
-              )}
-            />
-            <Controller
-              control={control}
-              name="category"
-              render={({ field: { onChange, value } }) => (
-                <FormField
-                  title="Category"
-                  placeholder="Enter cause category"
-                  value={value}
-                  handleChangeText={onChange}
-                  error={errors.category?.message}
-                />
-              )}
-            />
-            <Controller
-              control={control}
-              name="status"
-              render={({ field: { onChange, value } }) => (
-                <FormField
-                  title="Status"
-                  placeholder="Enter cause status"
-                  value={value}
-                  handleChangeText={onChange}
-                  error={errors.status?.message}
-                />
-              )}
-            />
+          <Controller
+            control={methods.control}
+            name="title"
+            render={({ field }) => (
+              <FormField
+                {...field}
+                title="Title"
+                placeholder="Enter title"
+                handleChangeText={field.onChange}
+                error={errors.title?.message}
+              />
+            )}
+          />
 
-            <CustomButton
-              title="Create Cause"
-              handlePress={handleSubmit(onSubmit)}
-              isLoading={isPending}
-            />
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </TouchableWithoutFeedback>
+          <Controller
+            control={methods.control}
+            name="description"
+            render={({ field }) => (
+              <FormField
+                {...field}
+                title="Description"
+                placeholder="Enter description"
+                handleChangeText={field.onChange}
+                error={errors.description?.message}
+              />
+            )}
+          />
+
+          <Controller
+            control={methods.control}
+            name="category"
+            render={({ field }) => (
+              <FormField
+                {...field}
+                title="Category"
+                placeholder="Enter category"
+                handleChangeText={field.onChange}
+                error={errors.category?.message}
+              />
+            )}
+          />
+
+          <Controller
+            control={methods.control}
+            name="status"
+            render={({ field }) => (
+              <FormField
+                {...field}
+                title="Status"
+                placeholder="Enter status"
+                handleChangeText={field.onChange}
+                error={errors.status?.message}
+              />
+            )}
+          />
+          <Controller
+            control={methods.control}
+            name="status"
+            render={({ field }) => (
+              <FormField
+                {...field}
+                title="Status"
+                placeholder="Enter status"
+                handleChangeText={field.onChange}
+                error={errors.status?.message}
+              />
+            )}
+          />
+        </FormSection>
+      )}
+    />
   );
 }

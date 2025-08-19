@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import { TextInputProps } from "react-native";
 
 export type FormFieldProps = TextInputProps & {
@@ -16,6 +17,9 @@ export type CustomButtonProps = {
   containerStyles?: string;
   textStyles?: string;
   isLoading?: boolean;
+  disabled?: boolean;
+  leftSection?: ReactNode;
+  rightSeciton?: ReactNode;
 };
 
 export type Option = {

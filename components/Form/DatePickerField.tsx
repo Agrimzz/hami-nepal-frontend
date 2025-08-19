@@ -1,6 +1,6 @@
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 import React, { useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 import { DatePickerFieldProps } from "./Form.type";
 
 export function DatePickerField({
@@ -15,7 +15,7 @@ export function DatePickerField({
   const [showPicker, setShowPicker] = useState(false);
 
   return (
-    <TouchableOpacity
+    <Pressable
       onPress={() => setShowPicker(true)}
       className={`w-full min-h-[50px] space-y-1 bg-white/5 px-4 py-4 rounded-xl border border-white/5 ${otherStyles}`}
     >
@@ -53,6 +53,6 @@ export function DatePickerField({
       )}
 
       {error && <Text className="text-red-500 text-sm">{error}</Text>}
-    </TouchableOpacity>
+    </Pressable>
   );
 }

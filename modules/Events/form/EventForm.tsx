@@ -1,27 +1,18 @@
 import {
-  CustomButton,
   DatePickerField,
   FormField,
+  FormSection,
+  FormWizard,
   SelectBottomSheet,
 } from "@/components";
 import { useApiMutation } from "@/hooks/useApiMutation";
 import { useApiQuery } from "@/hooks/useApiQuery";
 import AltLayoutRouteContext from "@/layouts/AltLayout/context/AltLayoutRoute.context";
 import { CauseSchemaWithId } from "@/modules/Causes/form/causeSchema";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { router } from "expo-router";
-import { useContext, useEffect, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
-import {
-  Alert,
-  Keyboard,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  Text,
-  TouchableWithoutFeedback,
-  View,
-} from "react-native";
+import { useContext, useEffect } from "react";
+import { Controller } from "react-hook-form";
+import { Alert } from "react-native";
 import {
   EventCreateSchema,
   eventCreateSchema,
@@ -35,8 +26,6 @@ export function EventForm({
 }: {
   initialData?: EventSchemaWithId;
 }) {
-  const [showDatePicker, setShowDatePicker] = useState(false);
-
   const { setRoutePath } = useContext(AltLayoutRouteContext);
 
   const isEdit = Boolean(initialData);
@@ -51,23 +40,6 @@ export function EventForm({
     "/causes/v1/causes/"
   );
 
-  const {
-    control,
-    watch,
-    setValue,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<EventCreateSchema | EventEditSchema>({
-    resolver: zodResolver(schema),
-    defaultValues: initialData || {
-      title: "",
-      description: "",
-      event_date: "",
-      location: "",
-      cause_id: undefined as unknown as string,
-    },
-  });
-
   const { mutate: saveEvent, isPending } = useApiMutation(
     isEdit ? "patch" : "post",
     isEdit ? `/causes/v1/events/${initialData?.id}/` : "/causes/v1/events/"
@@ -77,7 +49,7 @@ export function EventForm({
     console.log(data);
     saveEvent(data, {
       onSuccess: () => {
-        router.push("/causes/events");
+        router.replace("/causes/events");
 
         Alert.alert(
           "Success",
@@ -92,105 +64,103 @@ export function EventForm({
   };
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 60 : 0}
-        style={{ flex: 1 }}
-      >
-        <ScrollView
-          style={{ flex: 1 }}
-          keyboardShouldPersistTaps="handled"
-          contentContainerStyle={{ flexGrow: 1 }}
+    <FormWizard
+      title={isEdit ? "Edit Event" : "Create a new Event"}
+      schema={schema}
+      defaultValues={
+        initialData || {
+          title: "",
+          description: "",
+          event_date: "",
+          location: "",
+          cause_id: undefined as unknown as string,
+        }
+      }
+      submitLabel={
+        isPending ? "Saving..." : isEdit ? "Update Event" : "Create Event"
+      }
+      onSubmit={onSubmit}
+      renderSections={(methods) => (
+        <FormSection
+          title="Event Details"
+          description="Basic information of the event"
         >
-          <View className="px-6 py-4 gap-2">
-            <View className="flex flex-row justify-between items-center">
-              <Text className="text-white font-pbold text-lg">
-                Event Details
-              </Text>
-              <Text className="text-xs text-lightgray font-pbold">
-                Add a new event
-              </Text>
-            </View>
-            <Controller
-              control={control}
-              name="title"
-              render={({ field: { onChange, value } }) => (
-                <FormField
-                  title="Title"
-                  placeholder="Enter event title"
-                  value={value}
-                  handleChangeText={onChange}
-                  error={errors.title?.message}
-                />
-              )}
-            />
-            <Controller
-              control={control}
-              name="description"
-              render={({ field: { onChange, value } }) => (
-                <FormField
-                  title="Description"
-                  placeholder="Enter event description"
-                  value={value}
-                  handleChangeText={onChange}
-                  error={errors.description?.message}
-                />
-              )}
-            />
+          <Controller
+            control={methods.control}
+            name="title"
+            render={({ field }) => (
+              <FormField
+                {...field}
+                title="Title"
+                placeholder="Enter title"
+                handleChangeText={field.onChange}
+                error={methods.formState.errors.title?.message}
+              />
+            )}
+          />
 
-            <Controller
-              control={control}
-              name="event_date"
-              render={({ field: { value, onChange } }) => (
-                <DatePickerField
-                  title="Event Date"
-                  value={watch("event_date")}
-                  onChange={(val) => setValue("event_date", val)}
-                  error={errors.event_date?.message}
-                />
-              )}
-            />
+          <Controller
+            control={methods.control}
+            name="description"
+            render={({ field }) => (
+              <FormField
+                {...field}
+                title="Description"
+                placeholder="Enter description"
+                handleChangeText={field.onChange}
+                error={methods.formState.errors.description?.message}
+              />
+            )}
+          />
 
-            <Controller
-              control={control}
-              name="location"
-              render={({ field: { onChange, value } }) => (
-                <FormField
-                  title="Location"
-                  placeholder="Enter cause location"
-                  value={value}
-                  handleChangeText={onChange}
-                  error={errors.location?.message}
-                />
-              )}
-            />
+          <Controller
+            control={methods.control}
+            name="event_date"
+            render={({ field }) => (
+              <DatePickerField
+                {...field}
+                title="Event Date"
+                placeholder="Enter event date"
+                onChange={field.onChange}
+                error={methods.formState.errors.event_date?.message}
+                mode="date"
+                otherStyles="w-[100%]"
+              />
+            )}
+          />
 
-            <Controller
-              control={control}
-              name="cause_id"
-              render={({ field: { onChange, value } }) => (
-                <SelectBottomSheet
-                  options={causes?.map((cause) => ({
-                    label: cause.title,
-                    value: cause.id,
-                  }))}
-                  value={value}
-                  placeholder="Select cause"
-                  title="Choose Cause"
-                  onChange={(val) => onChange(val)}
-                />
-              )}
-            />
+          <Controller
+            control={methods.control}
+            name="location"
+            render={({ field }) => (
+              <FormField
+                {...field}
+                title="Location"
+                placeholder="Enter location"
+                handleChangeText={field.onChange}
+                error={methods.formState.errors.location?.message}
+              />
+            )}
+          />
 
-            <CustomButton
-              title="Create Cause"
-              handlePress={handleSubmit(onSubmit)}
-              isLoading={isPending}
-            />
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </TouchableWithoutFeedback>
+          <Controller
+            control={methods.control}
+            name="cause_id"
+            render={({ field }) => (
+              <SelectBottomSheet
+                options={causes?.map((cause) => ({
+                  label: cause.title,
+                  value: cause.id,
+                }))}
+                value={field.value}
+                placeholder="Select cause"
+                title="Cause"
+                onChange={field.onChange}
+              />
+            )}
+          />
+        </FormSection>
+      )}
+    />
   );
 }

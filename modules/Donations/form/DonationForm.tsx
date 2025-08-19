@@ -1,20 +1,18 @@
-import { CustomButton, FormField, SelectBottomSheet } from "@/components";
+import React, { useContext, useEffect } from "react";
+import { Controller } from "react-hook-form";
+import { Alert } from "react-native";
+import { z } from "zod";
+
+import {
+  FormField,
+  FormSection,
+  FormWizard,
+  SelectBottomSheet,
+} from "@/components";
 import { useApiMutation } from "@/hooks/useApiMutation";
 import AltLayoutRouteContext from "@/layouts/AltLayout/context/AltLayoutRoute.context";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { router } from "expo-router";
-import { useContext, useEffect } from "react";
-import { Controller, useForm } from "react-hook-form";
-import {
-  Alert,
-  Keyboard,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  Text,
-  TouchableWithoutFeedback,
-  View,
-} from "react-native";
+
 import {
   DonationCreateSchema,
   donationCreateSchema,
@@ -23,35 +21,17 @@ import {
   DonationSchemaWithId,
 } from "./donation.schema";
 
-export function DonationForm({
-  initialData,
-}: {
-  initialData?: DonationSchemaWithId;
-}) {
+type Props = { initialData?: DonationSchemaWithId };
+
+export function DonationForm({ initialData }: Props) {
   const { setRoutePath } = useContext(AltLayoutRouteContext);
 
   const isEdit = Boolean(initialData);
   const schema = isEdit ? donationEditSchema : donationCreateSchema;
 
   useEffect(() => {
-    setRoutePath(initialData ? "Donations / Edit" : "Donations / New");
-  });
-
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<DonationCreateSchema | DonationEditSchema>({
-    resolver: zodResolver(schema),
-    defaultValues: initialData || {
-      type: "fund",
-      amount: "",
-      remarks: "",
-      source_name: "",
-      source_email: "",
-      source_phone: "",
-    },
-  });
+    setRoutePath(isEdit ? "Donations / Edit" : "Donations / New");
+  }, [isEdit, setRoutePath]);
 
   const { mutate: saveDonation, isPending } = useApiMutation(
     isEdit ? "patch" : "post",
@@ -63,15 +43,14 @@ export function DonationForm({
   const onSubmit = (data: DonationCreateSchema | DonationEditSchema) => {
     saveDonation(data, {
       onSuccess: () => {
-        isEdit && router.back();
+        if (isEdit) router.back();
         router.replace("/donations" as any);
-
         Alert.alert(
           "Success",
           `Donation ${isEdit ? "updated" : "created"} successfully`
         );
       },
-      onError: (err: any) => {
+      onError: (err: unknown) => {
         console.error("Create Donation Error:", err);
         Alert.alert(
           "Error",
@@ -80,31 +59,38 @@ export function DonationForm({
       },
     });
   };
+
+  const defaults: z.infer<typeof schema> = (initialData as any) ?? {
+    type: "fund",
+    amount: "",
+    remarks: "",
+    source_name: "",
+    source_email: "",
+    source_phone: "",
+  };
+
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 60 : 0}
-        style={{ flex: 1 }}
-      >
-        <ScrollView
-          style={{ flex: 1 }}
-          keyboardShouldPersistTaps="handled"
-          contentContainerStyle={{ flexGrow: 1 }}
-        >
-          <View className="px-6 py-4 gap-6 h-full ">
-            {/* User Image */}
-            <View className="gap-2">
-              <View className="flex flex-row justify-between items-center">
-                <Text className="text-white font-pbold text-lg">
-                  Donation Details
-                </Text>
-                <Text className="text-xs text-lightgray font-pbold">
-                  Information about the donation
-                </Text>
-              </View>
+    <FormWizard
+      title={isEdit ? "Edit Donation" : "Create a new Donation"}
+      schema={schema}
+      defaultValues={defaults}
+      submitLabel={
+        isPending ? "Saving..." : isEdit ? "Update Donation" : "Create Donation"
+      }
+      onSubmit={onSubmit}
+      steps={[
+        {
+          key: "donation",
+          title: "Donation Details",
+          description: "Information about the donation",
+          fields: ["type", "amount", "remarks"], // ⬅️ per-step validation
+          render: (methods) => (
+            <FormSection
+              title="Donation Details"
+              description="Information about the donation"
+            >
               <Controller
-                control={control}
+                control={methods.control}
                 name="type"
                 render={({ field: { onChange, value } }) => (
                   <SelectBottomSheet
@@ -119,99 +105,115 @@ export function DonationForm({
                   />
                 )}
               />
+
               <Controller
-                control={control}
+                control={methods.control}
                 name="amount"
                 render={({ field: { onChange, value } }) => (
                   <FormField
                     title="Amount"
                     placeholder="Enter amount"
-                    value={value}
+                    value={value as any}
                     type="number"
                     handleChangeText={onChange}
-                    error={errors.amount?.message}
+                    error={
+                      methods.formState.errors.amount?.message as
+                        | string
+                        | undefined
+                    }
                   />
                 )}
               />
 
               <Controller
-                control={control}
+                control={methods.control}
                 name="remarks"
                 render={({ field: { onChange, value } }) => (
                   <FormField
                     title="Remarks"
                     placeholder="Enter remarks"
-                    value={value}
+                    value={value as any}
                     handleChangeText={onChange}
-                    error={errors.remarks?.message}
+                    error={
+                      methods.formState.errors.remarks?.message as
+                        | string
+                        | undefined
+                    }
                   />
                 )}
               />
-            </View>
-
-            <View className="gap-2">
-              <View className="flex flex-row justify-between items-center">
-                <Text className="text-white font-pbold text-lg">
-                  Donor Details
-                </Text>
-                <Text className="text-xs text-lightgray font-pbold">
-                  Basic information of the donor
-                </Text>
-              </View>
-
+            </FormSection>
+          ),
+        },
+        {
+          key: "donor",
+          title: "Donor Details",
+          description: "Basic information of the donor",
+          fields: ["source_name", "source_email", "source_phone"], // ⬅️ per-step validation
+          render: (methods) => (
+            <FormSection
+              title="Donor Details"
+              description="Basic information of the donor"
+            >
               <Controller
-                control={control}
+                control={methods.control}
                 name="source_name"
                 render={({ field: { onChange, value } }) => (
                   <FormField
                     title="Name"
                     placeholder="Enter name"
-                    value={value}
+                    value={value as any}
                     handleChangeText={onChange}
-                    error={errors.source_name?.message}
+                    error={
+                      methods.formState.errors.source_name?.message as
+                        | string
+                        | undefined
+                    }
                   />
                 )}
               />
 
               <Controller
-                control={control}
+                control={methods.control}
                 name="source_email"
                 render={({ field: { onChange, value } }) => (
                   <FormField
                     title="Email"
                     placeholder="Enter email"
-                    value={value}
                     type="email"
+                    value={value as any}
                     handleChangeText={onChange}
-                    error={errors.source_email?.message}
+                    error={
+                      methods.formState.errors.source_email?.message as
+                        | string
+                        | undefined
+                    }
                   />
                 )}
               />
 
               <Controller
-                control={control}
+                control={methods.control}
                 name="source_phone"
                 render={({ field: { onChange, value } }) => (
                   <FormField
                     title="Phone Number"
                     placeholder="Enter phone number"
-                    value={value}
                     type="phone"
+                    value={value as any}
                     handleChangeText={onChange}
-                    error={errors.source_phone?.message}
+                    error={
+                      methods.formState.errors.source_phone?.message as
+                        | string
+                        | undefined
+                    }
                   />
                 )}
               />
-            </View>
-            <CustomButton
-              title="Save"
-              handlePress={handleSubmit(onSubmit)}
-              isLoading={isPending}
-              containerStyles="mt-4"
-            />
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </TouchableWithoutFeedback>
+            </FormSection>
+          ),
+        },
+      ]}
+    />
   );
 }

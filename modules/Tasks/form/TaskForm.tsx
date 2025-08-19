@@ -1,29 +1,25 @@
+// modules/Tasks/TaskForm.tsx
+import { router } from "expo-router";
+import React, { useContext, useEffect } from "react";
+import { Controller } from "react-hook-form";
+import { Alert, View } from "react-native";
+import { z } from "zod";
+
 import {
-  CustomButton,
   DatePickerField,
   FormField,
+  FormSection,
+  FormWizard,
   SelectBottomSheet,
 } from "@/components";
 import { useApiMutation } from "@/hooks/useApiMutation";
 import { useApiQuery } from "@/hooks/useApiQuery";
 import AltLayoutRouteContext from "@/layouts/AltLayout/context/AltLayoutRoute.context";
+
 import { UserSchemaWithId } from "@/modules/Accounts/form/userSchema";
 import { CauseSchemaWithId } from "@/modules/Causes/form/causeSchema";
 import { EventSchemaWithId } from "@/modules/Events/form/eventSchema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { router } from "expo-router";
-import { useContext, useEffect } from "react";
-import { Controller, useForm } from "react-hook-form";
-import {
-  Alert,
-  Keyboard,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  Text,
-  TouchableWithoutFeedback,
-  View,
-} from "react-native";
+
 import {
   TaskCreateSchema,
   taskCreateSchema,
@@ -32,16 +28,19 @@ import {
   TaskSchemaWithId,
 } from "./taskSchema";
 
-export function TaskForm({ initialData }: { initialData?: TaskSchemaWithId }) {
+type Props = { initialData?: TaskSchemaWithId };
+
+export function TaskForm({ initialData }: Props) {
   const { setRoutePath } = useContext(AltLayoutRouteContext);
 
   const isEdit = Boolean(initialData);
   const schema = isEdit ? taskEditSchema : taskCreateSchema;
 
   useEffect(() => {
-    setRoutePath(initialData ? "Tasks / Edit" : "Tasks / New");
-  }, [initialData, setRoutePath]);
+    setRoutePath(isEdit ? "Tasks / Edit" : "Tasks / New");
+  }, [isEdit, setRoutePath]);
 
+  // Reference data
   const { data: causes } = useApiQuery<CauseSchemaWithId[]>(
     ["causes"],
     "/causes/v1/causes/"
@@ -55,123 +54,113 @@ export function TaskForm({ initialData }: { initialData?: TaskSchemaWithId }) {
     "/accounts/v1/users/"
   );
 
-  const {
-    control,
-    watch,
-    setValue,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<TaskCreateSchema | TaskEditSchema>({
-    resolver: zodResolver(schema),
-    defaultValues: initialData
-      ? {
-          ...initialData,
-          assignee_ids: initialData?.assignees?.map((assignee) =>
-            assignee.id.toString()
-          ),
-          cause_id: initialData?.cause?.id.toString(),
-          event_id: initialData?.event?.id.toString(),
-        }
-      : {
-          title: "",
-          description: "",
-          due_date: "",
-          status: "ongoing",
-          assignee_ids: [],
-          cause_id: undefined as unknown as string,
-          event_id: undefined as unknown as string,
-          priority: undefined as unknown as string,
-        },
-  });
-
   const { mutate: saveTask, isPending } = useApiMutation(
     isEdit ? "patch" : "post",
     isEdit ? `/tasks/v1/tasks/${initialData?.id}/` : "/tasks/v1/tasks/"
   );
 
   const onSubmit = (data: TaskCreateSchema | TaskEditSchema) => {
-    console.log(data);
     saveTask(data, {
       onSuccess: () => {
-        router.replace("/tasks");
-
+        router.back();
         Alert.alert(
           "Success",
           `Task ${isEdit ? "updated" : "created"} successfully`
         );
       },
-      onError: (err: any) => {
+      onError: (err: unknown) => {
         console.error("Create Task Error:", err);
         Alert.alert("Error", `Failed to ${isEdit ? "update" : "create"} task`);
       },
     });
   };
 
+  // Provide complete defaults for RHF (strings can be empty)
+  const defaults: z.infer<typeof schema> = initialData
+    ? {
+        ...initialData,
+        assignee_ids: initialData.assignees?.map((a) => String(a.id)) ?? [],
+        cause_id: initialData.cause
+          ? String(initialData.cause.id)
+          : (undefined as unknown as string),
+        event_id: initialData.event
+          ? String(initialData.event.id)
+          : (undefined as unknown as string),
+      }
+    : {
+        title: "",
+        description: "",
+        due_date: "",
+        status: "ongoing",
+        assignee_ids: [],
+        cause_id: undefined as unknown as string,
+        event_id: undefined as unknown as string,
+        priority: undefined as unknown as string,
+      };
+
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 60 : 0}
-        style={{ flex: 1 }}
-      >
-        <ScrollView
-          style={{ flex: 1 }}
-          keyboardShouldPersistTaps="handled"
-          contentContainerStyle={{ flexGrow: 1 }}
-        >
-          <View className="px-6 py-4 gap-2">
-            <View className="flex flex-row justify-between items-center">
-              <Text className="text-white font-pbold text-lg">
-                Task Details
-              </Text>
-              <Text className="text-xs text-lightgray font-pbold">
-                Add a new task
-              </Text>
-            </View>
+    <FormWizard
+      title={isEdit ? "Edit Task" : "New Task"}
+      schema={schema}
+      defaultValues={defaults}
+      submitLabel={
+        isPending ? "Saving..." : isEdit ? "Update Task" : "Create Task"
+      }
+      onSubmit={onSubmit}
+      // no `steps` prop => non‑stepper mode
+      renderSections={(methods) => (
+        <View className="gap-6">
+          {/* Section 1: Task Details */}
+          <FormSection title="Task Details" description="Add a new task">
             <Controller
-              control={control}
+              control={methods.control}
               name="title"
-              render={({ field: { onChange, value } }) => (
+              render={({ field }) => (
                 <FormField
                   title="Title"
                   placeholder="Enter task title"
-                  value={value}
-                  handleChangeText={onChange}
-                  error={errors.title?.message}
+                  value={field.value}
+                  handleChangeText={field.onChange}
+                  error={methods.formState.errors.title?.message}
                 />
               )}
             />
             <Controller
-              control={control}
+              control={methods.control}
               name="description"
-              render={({ field: { onChange, value } }) => (
+              render={({ field }) => (
                 <FormField
                   title="Description"
                   placeholder="Enter task description"
-                  value={value}
-                  handleChangeText={onChange}
-                  error={errors.description?.message}
+                  value={field.value}
+                  handleChangeText={field.onChange}
+                  error={methods.formState.errors.description?.message}
                 />
               )}
             />
+          </FormSection>
 
+          {/* Section 2: Scheduling & Status */}
+          <FormSection
+            title="Scheduling & Status"
+            description="Timeline and progress"
+          >
             <Controller
-              control={control}
+              control={methods.control}
               name="due_date"
-              render={({ field: { value, onChange } }) => (
+              render={({ field }) => (
                 <DatePickerField
                   title="Due Date"
-                  value={watch("due_date")}
-                  onChange={(val) => setValue("due_date", val)}
-                  error={errors.due_date?.message}
+                  value={field.value}
+                  onChange={field.onChange}
+                  error={methods.formState.errors.due_date?.message}
                 />
               )}
             />
-
             <Controller
-              control={control}
+              control={methods.control}
               name="status"
-              render={({ field: { onChange, value } }) => (
+              render={({ field }) => (
                 <SelectBottomSheet
                   options={[
                     { label: "Ongoing", value: "ongoing" },
@@ -179,18 +168,17 @@ export function TaskForm({ initialData }: { initialData?: TaskSchemaWithId }) {
                     { label: "Cancelled", value: "cancelled" },
                     { label: "On Hold", value: "onhold" },
                   ]}
-                  value={value}
+                  value={field.value}
                   placeholder="Select status"
                   title="Choose Status"
-                  onChange={(val) => onChange(val)}
+                  onChange={field.onChange}
                 />
               )}
             />
-
             <Controller
-              control={control}
+              control={methods.control}
               name="priority"
-              render={({ field: { onChange, value } }) => (
+              render={({ field }) => (
                 <SelectBottomSheet
                   options={[
                     { label: "Low", value: "low" },
@@ -198,74 +186,74 @@ export function TaskForm({ initialData }: { initialData?: TaskSchemaWithId }) {
                     { label: "High", value: "high" },
                     { label: "Urgent", value: "urgent" },
                   ]}
-                  value={value}
+                  value={field.value}
                   placeholder="Select priority"
                   title="Choose Priority"
-                  onChange={(val) => onChange(val)}
+                  onChange={field.onChange}
                 />
               )}
             />
+          </FormSection>
 
+          {/* Section 3: Assignment */}
+          <FormSection
+            title="Assignment"
+            description="Who and where this task belongs"
+          >
             <Controller
-              control={control}
+              control={methods.control}
               name="assignee_ids"
-              render={({ field: { onChange, value } }) => (
+              render={({ field }) => (
                 <SelectBottomSheet
-                  options={users?.map((cause) => ({
-                    label: cause.full_name,
-                    value: cause.id,
+                  options={users?.map((u) => ({
+                    label: u.full_name,
+                    value: String(u.id),
                   }))}
-                  value={value}
+                  value={field.value}
                   placeholder="Select assignees"
-                  title="Choose assignees"
+                  title="Choose Assignees"
                   multiple
-                  onChange={(val) => onChange(val)}
+                  onChange={field.onChange}
                 />
               )}
             />
 
             <Controller
-              control={control}
+              control={methods.control}
               name="cause_id"
-              render={({ field: { onChange, value } }) => (
+              render={({ field }) => (
                 <SelectBottomSheet
-                  options={causes?.map((cause) => ({
-                    label: cause.title,
-                    value: cause.id,
+                  options={causes?.map((c) => ({
+                    label: c.title,
+                    value: String(c.id),
                   }))}
-                  value={value}
+                  value={field.value}
                   placeholder="Select cause"
                   title="Choose Cause"
-                  onChange={(val) => onChange(val)}
+                  onChange={field.onChange}
                 />
               )}
             />
 
             <Controller
-              control={control}
+              control={methods.control}
               name="event_id"
-              render={({ field: { onChange, value } }) => (
+              render={({ field }) => (
                 <SelectBottomSheet
-                  options={events?.map((event) => ({
-                    label: event.title,
-                    value: event.id,
+                  options={events?.map((e) => ({
+                    label: e.title,
+                    value: String(e.id),
                   }))}
-                  value={value}
+                  value={field.value}
                   placeholder="Select event"
                   title="Choose Event"
-                  onChange={(val) => onChange(val)}
+                  onChange={field.onChange}
                 />
               )}
             />
-
-            <CustomButton
-              title={isEdit ? "Update Task" : "Create Task"}
-              handlePress={handleSubmit(onSubmit)}
-              isLoading={isPending}
-            />
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </TouchableWithoutFeedback>
+          </FormSection>
+        </View>
+      )}
+    />
   );
 }
