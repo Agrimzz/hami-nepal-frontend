@@ -1,4 +1,3 @@
-// components/form-kit/FormWizard.tsx
 import { zodResolver } from "@hookform/resolvers/zod";
 import { router } from "expo-router";
 import { ChevronLeft, ChevronRight, X } from "lucide-react-native";
